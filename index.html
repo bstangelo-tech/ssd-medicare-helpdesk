@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medicare HelpDesk — Senior Services Direct</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;font-size:14px;background:#f4f4f0;color:#1a1a18;}
+
+/* ── THEME ── */
+:root{
+  --navy:#042C53;--navy2:#0C447C;--blue:#185FA5;--blue2:#378ADD;--blue3:#E6F1FB;
+  --teal:#1D9E75;--teal2:#E1F5EE;--teal3:#085041;
+  --amber:#EF9F27;--amber2:#FAEEDA;--amber3:#633806;
+  --coral:#D85A30;--coral2:#FAECE7;
+  --purple:#534AB7;--purple2:#EEEDFE;
+  --green:#3B6D11;--green2:#EAF3DE;
+  --red:#A32D2D;--red2:#FCEBEB;
+  --bg:#ffffff;--bg2:#f7f6f2;--bg3:#f0efe9;
+  --t:#1a1a18;--tm:#5f5e5a;--tt:#888780;
+  --b:rgba(26,26,24,.1);--b2:rgba(26,26,24,.22);
+  --r:12px;--rm:8px;
+  --shadow:0 1px 3px rgba(0,0,0,.08);
+}
+
+/* ── LAYOUT ── */
+.app{display:flex;flex-direction:column;height:100vh;}
+
+/* ── HEADER ── */
+header{
+  background:var(--navy);height:60px;
+  display:flex;align-items:center;padding:0 20px;gap:14px;
+  flex-shrink:0;border-bottom:1px solid rgba(55,138,221,.2);
+  box-shadow:0 1px 8px rgba(0,0,0,.3);
+}
+.logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--blue2),var(--blue));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo svg{width:20px;height:20px;}
+.brand h1{font-family:'Instrument Serif',serif;font-size:18px;color:#fff;font-weight:400;line-height:1.1;}
+.brand p{font-size:10px;color:#85B7EB;letter-spacing:.06em;text-transform:uppercase;margin-top:1px;}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.status-pill{display:flex;align-items:center;gap:5px;background:rgba(29,158,117,.15);border:0.5px solid rgba(29,158,117,.4);color:#9FE1CB;font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;}
+.status-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 2s infinite;}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid rgba(255,255,255,.15);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#85B7EB;transition:background .15s;}
+.icon-btn:hover{background:rgba(255,255,255,.1);}
+.icon-btn svg{width:15px;height:15px;}
+
+/* ── TABS ── */
+.tabs{display:flex;background:var(--navy2);border-bottom:1px solid rgba(55,138,221,.2);padding:0 20px;flex-shrink:0;overflow-x:auto;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:10px 16px;font-size:12px;font-weight:500;color:#85B7EB;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;background:none;border-left:none;border-right:none;border-top:none;}
+.tab:hover{color:#fff;}
+.tab.active{color:#fff;border-bottom-color:var(--blue2);}
+
+/* ── BODY ── */
+.body{display:flex;flex:1;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:215px;flex-shrink:0;background:var(--bg);border-right:0.5px solid var(--b);display:flex;flex-direction:column;overflow:hidden;}
+.sb-section{padding:13px 13px 6px;}
+.sb-label{font-size:10px;font-weight:600;color:var(--tt);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.sb-btn{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:12.5px;color:var(--tm);transition:all .15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;}
+.sb-btn:hover{background:var(--bg2);color:var(--t);}
+.sb-btn.active{background:var(--blue3);color:var(--blue);}
+.sb-btn svg{width:13px;height:13px;flex-shrink:0;opacity:.6;}
+.sb-btn.active svg{opacity:1;}
+.sb-divider{height:0.5px;background:var(--b);margin:7px 13px;}
+.sb-scroll{overflow-y:auto;flex:1;}
+.sb-group{padding:9px 13px 3px;font-size:9.5px;font-weight:600;color:var(--tt);text-transform:uppercase;letter-spacing:.1em;}
+.sb-carrier{display:flex;align-items:center;gap:8px;padding:6px 13px;font-size:12px;color:var(--tm);cursor:pointer;transition:all .15s;}
+.sb-carrier:hover{background:var(--bg2);color:var(--t);}
+.c-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ── CHAT ── */
+#chat-panel{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+.messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:15px;}
+.msg{display:flex;gap:10px;align-items:flex-start;animation:msgIn .2s ease;}
+.msg.user{flex-direction:row-reverse;}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;}
+.msg.bot .avatar{background:var(--navy2);color:#85B7EB;}
+.msg.user .avatar{background:var(--teal2);color:var(--teal3);}
+.bubble{max-width:77%;padding:11px 15px;border-radius:14px;font-size:13.5px;line-height:1.75;color:var(--t);}
+.msg.bot .bubble{background:var(--bg);border:0.5px solid var(--b);border-top-left-radius:3px;box-shadow:var(--shadow);}
+.msg.user .bubble{background:var(--navy2);color:#fff;border-top-right-radius:3px;}
+.bubble strong,.bubble b{font-weight:600;}
+.bubble ul{margin:6px 0 4px 18px;display:flex;flex-direction:column;gap:3px;}
+.bubble li{font-size:13px;}
+.bubble ol{margin:6px 0 4px 20px;}
+.msg-time{font-size:10px;color:var(--tt);margin-top:3px;padding:0 4px;}
+.msg.user .msg-time{text-align:right;}
+
+/* typing */
+.typing-row{display:flex;gap:10px;align-items:center;}
+.typing-bub{background:var(--bg);border:0.5px solid var(--b);border-radius:14px;border-top-left-radius:3px;padding:12px 16px;display:flex;align-items:center;gap:5px;box-shadow:var(--shadow);}
+.typing-bub span{width:6px;height:6px;background:var(--blue2);border-radius:50%;animation:bounce 1.1s infinite;}
+.typing-bub span:nth-child(2){animation-delay:.18s;}
+.typing-bub span:nth-child(3){animation-delay:.36s;}
+
+/* ── INPUT ── */
+.input-area{padding:12px 20px 14px;background:var(--bg);border-top:0.5px solid var(--b);flex-shrink:0;}
+.input-row{display:flex;gap:8px;align-items:flex-end;}
+textarea.chat-input{flex:1;resize:none;border:0.5px solid var(--b2);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--t);line-height:1.5;min-height:42px;max-height:110px;outline:none;transition:border .15s;}
+textarea.chat-input:focus{border-color:var(--blue2);background:var(--bg);}
+textarea.chat-input::placeholder{color:var(--tt);}
+.send-btn{width:40px;height:40px;border-radius:10px;background:var(--navy2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s,transform .1s;}
+.send-btn:hover{background:var(--blue2);}
+.send-btn:active{transform:scale(.96);}
+.send-btn:disabled{opacity:.4;cursor:not-allowed;}
+.send-btn svg{width:17px;height:17px;}
+.hint-chips{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
+.chip{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:500;background:var(--blue3);color:var(--blue);border:0.5px solid rgba(24,95,165,.2);cursor:pointer;transition:all .15s;}
+.chip:hover{background:var(--blue);color:#fff;}
+.disclaimer{margin-top:8px;padding:6px 10px;background:var(--amber2);border-radius:7px;font-size:11px;color:var(--amber3);line-height:1.4;}
+
+/* ── REFERENCE PANEL ── */
+.ref-panel{width:245px;flex-shrink:0;background:var(--bg);border-left:0.5px solid var(--b);overflow-y:auto;display:flex;flex-direction:column;}
+.ref-section{padding:14px;}
+.ref-title{font-size:10px;font-weight:600;color:var(--tt);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.ref-card{background:var(--bg2);border-radius:8px;padding:10px 12px;margin-bottom:7px;border:0.5px solid var(--b);}
+.ref-card-label{font-size:10px;color:var(--tm);margin-bottom:1px;}
+.ref-card-value{font-size:16px;font-weight:600;color:var(--t);line-height:1.2;}
+.ref-card-sub{font-size:10px;color:var(--tm);margin-top:1px;}
+.ref-divider{height:0.5px;background:var(--b);margin:4px 14px 12px;}
+.ref-quick-btn{display:block;width:100%;text-align:left;padding:7px 10px;margin-bottom:4px;border:0.5px solid var(--b);border-radius:7px;background:var(--bg);font-size:12px;color:var(--tm);cursor:pointer;transition:all .15s;}
+.ref-quick-btn:hover{background:var(--blue3);color:var(--blue);border-color:rgba(24,95,165,.25);}
+.ref-quick-btn span{display:block;font-size:10px;color:var(--tt);margin-top:1px;}
+
+/* ── STATIC PANELS ── */
+.view-panel{display:none;flex:1;overflow-y:auto;padding:22px;}
+.view-panel.active{display:block;}
+.view-h2{font-family:'Instrument Serif',serif;font-size:20px;color:var(--t);margin-bottom:16px;font-weight:400;}
+.view-card{background:var(--bg);border:0.5px solid var(--b);border-radius:10px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);}
+.view-card h3{font-size:14px;font-weight:600;color:var(--t);margin-bottom:6px;}
+.view-card p,.view-card li{font-size:13px;color:var(--tm);line-height:1.65;}
+.view-card ul{margin-left:16px;margin-top:5px;display:flex;flex-direction:column;gap:3px;}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.vstat{background:var(--bg2);border-radius:8px;padding:12px;border:0.5px solid var(--b);}
+.vstat-label{font-size:10px;color:var(--tm);margin-bottom:2px;}
+.vstat-val{font-size:20px;font-weight:600;color:var(--t);}
+.vstat-note{font-size:10px;color:var(--tm);margin-top:1px;}
+.alert{padding:10px 12px;border-radius:8px;margin-bottom:10px;font-size:13px;line-height:1.55;}
+.alert-blue{background:var(--blue3);color:#0C447C;border-left:3px solid var(--blue2);}
+.alert-amber{background:var(--amber2);color:var(--amber3);border-left:3px solid var(--amber);}
+.alert-teal{background:var(--teal2);color:var(--teal3);border-left:3px solid var(--teal);}
+.alert-red{background:var(--red2);color:var(--red);border-left:3px solid var(--red);}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:500;margin:2px 2px 0;border:0.5px solid var(--b);background:var(--bg2);}
+.badge-dot{width:6px;height:6px;border-radius:2px;}
+
+/* carrier grid */
+.carrier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px;margin-bottom:14px;}
+.c-card{background:var(--bg);border:0.5px solid var(--b);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow);}
+.c-card:hover{border-color:var(--b2);box-shadow:0 2px 8px rgba(0,0,0,.1);transform:translateY(-1px);}
+.c-card-name{font-size:13px;font-weight:600;color:var(--t);margin-bottom:3px;display:flex;align-items:center;gap:7px;}
+.c-card-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.c-card-region{font-size:11px;color:var(--tm);}
+.c-card-states{font-size:10px;color:var(--tt);margin-top:2px;}
+.c-tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin-top:5px;}
+.tag-nat{background:var(--blue3);color:var(--blue);}
+.tag-reg{background:var(--teal2);color:var(--teal3);}
+.tag-medi{background:var(--purple2);color:var(--purple);}
+.tag-pdp{background:var(--amber2);color:var(--amber3);}
+
+/* search */
+.search-wrap{position:relative;margin-bottom:14px;}
+.search-input{width:100%;border:0.5px solid var(--b2);border-radius:8px;padding:9px 12px 9px 34px;font-size:13px;background:var(--bg);color:var(--t);outline:none;font-family:'DM Sans',sans-serif;}
+.search-input:focus{border-color:var(--blue2);}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--tm);}
+.search-icon svg{width:14px;height:14px;}
+
+/* medigap table */
+.mg-table{width:100%;font-size:12px;border-collapse:collapse;margin-top:8px;}
+.mg-table th{text-align:left;padding:6px 8px;font-size:10.5px;font-weight:600;color:var(--tm);background:var(--bg2);}
+.mg-table td{padding:5px 8px;border-top:0.5px solid var(--b);}
+.mg-table tr:nth-child(even) td{background:var(--bg2);}
+.check{color:var(--teal);font-weight:700;}
+.cross{color:var(--tt);}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px;}
+
+/* animations */
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+
+/* responsive */
+@media(max-width:900px){.sidebar{display:none;}.ref-panel{display:none;}}
+@media(max-width:600px){.brand p{display:none;}.tabs{padding:0 8px;}.tab{padding:9px 10px;font-size:11px;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+  </div>
+  <div class="brand">
+    <h1>Medicare HelpDesk</h1>
+    <p>Senior Services Direct · National Edition 2026</p>
+  </div>
+  <div class="hdr-right">
+    <div class="status-pill"><div class="status-dot"></div>AI Online · 2026 Data</div>
+    <button class="icon-btn" title="Clear conversation" onclick="clearChat()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+    </button>
+    <button class="icon-btn" title="Export chat log" onclick="exportChat()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('chat',this)">Chat</button>
+  <button class="tab" onclick="switchTab('costs',this)">2026 Costs</button>
+  <button class="tab" onclick="switchTab('carriers',this)">All Carriers</button>
+  <button class="tab" onclick="switchTab('enroll',this)">Enrollment</button>
+  <button class="tab" onclick="switchTab('partd',this)">Part D</button>
+  <button class="tab" onclick="switchTab('medigap',this)">Medigap</button>
+  <button class="tab" onclick="switchTab('comply',this)">Compliance</button>
+</div>
+
+<!-- BODY -->
+<div class="body">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Topics</div>
+      <button class="sb-btn active" onclick="askTopic('Explain Medicare Parts A, B, C, and D — coverage, costs, who pays, and how they work together')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>Parts A B C D</button>
+      <button class="sb-btn" onclick="askTopic('Explain all Medicare enrollment periods: IEP, AEP, OEP, GEP, and every SEP with dates and qualifying events')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>Enrollment Periods</button>
+      <button class="sb-btn" onclick="askTopic('Compare Medicare Advantage vs Original Medicare plus Medigap: pros, cons, costs, flexibility, networks, who each suits best')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/></svg>MAPD vs Medigap</button>
+      <button class="sb-btn" onclick="askTopic('Explain the 2026 Part D redesign: $2,000 OOP cap, no coverage gap, Medicare Prescription Payment Plan, insulin cap, and agent talking points')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 10h-2v7h2v-7zm6 0h-2v7h2v-7zm8.5 9H2v2h19v-2zm-2.5-9h-2v7h2v-7zM11.5 1L2 6v2h19V6l-9.5-5z"/></svg>Part D 2026</button>
+      <button class="sb-btn" onclick="askTopic('Explain D-SNPs, C-SNPs, and I-SNPs: eligibility, monthly SEP for duals, agent sales considerations, and 2026 expansion data')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>SNPs &amp; Dual Eligible</button>
+      <button class="sb-btn" onclick="askTopic('Explain all Medigap plans A through N: what each covers, which are most popular, guaranteed issue rules, birthday rule by state, and Medigap vs MAPD tradeoffs')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>Medigap Plans</button>
+      <button class="sb-btn" onclick="askTopic('Explain LIS Extra Help for 2026: income and asset limits, full vs partial subsidy, auto-enrollment, how agents identify and assist eligible clients')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>LIS / Extra Help</button>
+      <button class="sb-btn" onclick="askTopic('Walk me through 2026 IRMAA brackets for Part B and Part D, the two-year lookback, and planning strategies agents can share with clients')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>IRMAA 2026</button>
+      <button class="sb-btn" onclick="askTopic('Explain Medicare appeals: redetermination, reconsideration, ALJ, MAC, Federal Court — timeframes, agent tips, and common denial reasons')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>Appeals</button>
+      <button class="sb-btn" onclick="askTopic('Full 2026 CMS compliance guide for agents: SOA rules, TPMO disclaimer, marketing rules, call recording, gifts, prohibited practices, and documentation')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>CMS Compliance</button>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-scroll">
+      <div class="sb-group">National Carriers</div>
+      <div class="sb-carrier" onclick="askTopic('UnitedHealthcare Medicare Advantage 2026: full national footprint, plan types across all 50 states, D-SNP and C-SNP availability, AARP PDPs, star ratings, and network issues')"><div class="c-dot" style="background:#185FA5"></div>UnitedHealthcare</div>
+      <div class="sb-carrier" onclick="askTopic('Humana Medicare Advantage 2026: national footprint by state, plan types, Part B giveback, star ratings, ESRD benefits, CarePlus subsidiary, and PDP lineup')"><div class="c-dot" style="background:#1D9E75"></div>Humana</div>
+      <div class="sb-carrier" onclick="askTopic('Aetna CVS Health Medicare Advantage 2026: national footprint, highest star ratings, SNP expansion, Extra Benefits Card, SilverScript PDP, and 2026 changes')"><div class="c-dot" style="background:#D85A30"></div>Aetna / CVS Health</div>
+      <div class="sb-carrier" onclick="askTopic('Wellcare Centene Medicare Advantage 2026: 32-state footprint, affordability focus, LIS auto-enrollment, Rewards Card, dual eligible plans, PDPs')"><div class="c-dot" style="background:#534AB7"></div>Wellcare / Centene</div>
+      <div class="sb-carrier" onclick="askTopic('Devoted Health Medicare Advantage 2026: 29-state presence, massive C-SNP expansion into 965 new counties, $0 premiums, tech model, differentiators')"><div class="c-dot" style="background:#EF9F27"></div>Devoted Health</div>
+      <div class="sb-carrier" onclick="askTopic('Elevance Health Anthem Blue Cross Medicare Advantage 2026: national footprint expansion, exit from PDP market, WellPoint and Healthy Blue brands, D-SNP growth')"><div class="c-dot" style="background:#3B6D11"></div>Elevance / Anthem</div>
+      <div class="sb-carrier" onclick="askTopic('HealthSpring HCSC formerly Cigna Medicare Advantage 2026: rebrand from Cigna, markets served, PDPs Assurance Rx and Extra Rx, star ratings, transition notes')"><div class="c-dot" style="background:#639922"></div>HealthSpring / HCSC</div>
+      <div class="sb-carrier" onclick="askTopic('Kaiser Permanente Medicare Advantage 2026: integrated HMO model, 8-state footprint, employed providers, star ratings, direct enrollment model')"><div class="c-dot" style="background:#A32D2D"></div>Kaiser Permanente</div>
+      <div class="sb-carrier" onclick="askTopic('Molina Healthcare Medicare Advantage 2026: multi-state footprint, Medicaid heritage, dual eligible and low-income focus, D-SNP and C-SNP plans by state')"><div class="c-dot" style="background:#0F6E56"></div>Molina Healthcare</div>
+      <div class="sb-carrier" onclick="askTopic('Mutual of Omaha Medicare Supplement Medigap 2026: plan lineup, pricing philosophy, financial strength AM Best rating, nationwide availability, and target demographics')"><div class="c-dot" style="background:#3C3489"></div>Mutual of Omaha</div>
+
+      <div class="sb-group">Regional Carriers by Area</div>
+      <div class="sb-carrier" onclick="askTopic('SCAN Health Plan Medicare Advantage 2026: California and Southwest states served, senior-focused non-profit model, plan types, star ratings, and agent notes')"><div class="c-dot" style="background:#3B6D11"></div>SCAN Health (CA/SW)</div>
+      <div class="sb-carrier" onclick="askTopic('Blue Shield of California Medicare Advantage 2026: California market, plan types, provider network, star ratings, and how it differs from other Blue plans')"><div class="c-dot" style="background:#185FA5"></div>Blue Shield CA</div>
+      <div class="sb-carrier" onclick="askTopic('Health Net Medicare Advantage 2026: California and select Western states, Centene subsidiary, plan types, dual eligible focus, star ratings')"><div class="c-dot" style="background:#D85A30"></div>Health Net (CA/West)</div>
+      <div class="sb-carrier" onclick="askTopic('Aspire Health Plan Medicare Advantage 2026: Monterey Bay California market, plan types, provider network, and agent considerations')"><div class="c-dot" style="background:#EF9F27"></div>Aspire Health (CA)</div>
+      <div class="sb-carrier" onclick="askTopic('Premera Blue Cross Medicare Advantage 2026: Pacific Northwest — Washington and Alaska markets, plan types, network, and 2026 offerings')"><div class="c-dot" style="background:#0C447C"></div>Premera Blue Cross (NW)</div>
+      <div class="sb-carrier" onclick="askTopic('Regence BlueCross BlueShield Medicare Advantage 2026: Pacific Northwest — Oregon, Washington, Idaho, Utah — plan types, network, and agent notes')"><div class="c-dot" style="background:#534AB7"></div>Regence BCBS (NW)</div>
+      <div class="sb-carrier" onclick="askTopic('Providence Health Plan Medicare Advantage 2026: Pacific Northwest Oregon and Washington market, integrated health system model, plan types')"><div class="c-dot" style="background:#1D9E75"></div>Providence Health (NW)</div>
+      <div class="sb-carrier" onclick="askTopic('Medica Medicare Advantage 2026: Minnesota and Midwest states, HMO and PPO plans, Medicaid background, star ratings, and agent considerations')"><div class="c-dot" style="background:#3C3489"></div>Medica (Midwest)</div>
+      <div class="sb-carrier" onclick="askTopic('UCare Medicare Advantage 2026: Minnesota market, provider-connected model, plan types, star ratings, and what agents should know')"><div class="c-dot" style="background:#639922"></div>UCare (MN)</div>
+      <div class="sb-carrier" onclick="askTopic('Dean Health Plan Medicare Advantage 2026: Wisconsin market, SSM Health affiliation, HMO plans, star ratings, and agent tips')"><div class="c-dot" style="background:#A32D2D"></div>Dean Health (WI)</div>
+      <div class="sb-carrier" onclick="askTopic('Quartz Medicare Advantage 2026: Wisconsin and surrounding states, provider-sponsored HMO, plan types, and market presence')"><div class="c-dot" style="background:#EF9F27"></div>Quartz (WI)</div>
+      <div class="sb-carrier" onclick="askTopic('Priority Health Medicare Advantage 2026: Michigan market, HMO and PPO plans, star ratings, provider network, and agent considerations')"><div class="c-dot" style="background:#185FA5"></div>Priority Health (MI)</div>
+      <div class="sb-carrier" onclick="askTopic('Health Alliance Plan Medicare Advantage 2026: Michigan market, Henry Ford Health System affiliation, plan types, star ratings')"><div class="c-dot" style="background:#1D9E75"></div>Health Alliance (MI)</div>
+      <div class="sb-carrier" onclick="askTopic('Capital Blue Cross Medicare Advantage 2026: Pennsylvania and surrounding Northeast region, plan types, network, star ratings, agent notes')"><div class="c-dot" style="background:#D85A30"></div>Capital Blue Cross (PA)</div>
+      <div class="sb-carrier" onclick="askTopic('Highmark Blue Cross Medicare Advantage 2026: Pennsylvania, West Virginia, Delaware markets, plan types, network, and 2026 updates')"><div class="c-dot" style="background:#534AB7"></div>Highmark BCBS (PA/WV)</div>
+      <div class="sb-carrier" onclick="askTopic('Independence Blue Cross Medicare Advantage 2026: Philadelphia and surrounding Pennsylvania region, plan types, network, star ratings')"><div class="c-dot" style="background:#3B6D11"></div>Independence BC (PA)</div>
+      <div class="sb-carrier" onclick="askTopic('CDPHP Medicare Advantage 2026: Northeastern New York — Albany and Capital Region, plan types, provider network, star ratings')"><div class="c-dot" style="background:#3C3489"></div>CDPHP (NY)</div>
+      <div class="sb-carrier" onclick="askTopic('MVP Health Care Medicare Advantage 2026: New York and Vermont markets, plan types, star ratings, and agent considerations')"><div class="c-dot" style="background:#639922"></div>MVP Health Care (NY/VT)</div>
+      <div class="sb-carrier" onclick="askTopic('Tufts Health Plan Medicare Advantage 2026: New England market, Massachusetts and surrounding states, plan types, network, star ratings')"><div class="c-dot" style="background:#A32D2D"></div>Tufts Health (NE)</div>
+      <div class="sb-carrier" onclick="askTopic('Fallon Health Medicare Advantage 2026: Massachusetts market, plan types, provider network, star ratings, and agent notes')"><div class="c-dot" style="background:#185FA5"></div>Fallon Health (MA)</div>
+      <div class="sb-carrier" onclick="askTopic('Baylor Scott and White Health Plan Medicare Advantage 2026: Texas market, provider-sponsored model, large hospital network, plan types, star ratings')"><div class="c-dot" style="background:#EF9F27"></div>Baylor Scott &amp; White (TX)</div>
+      <div class="sb-carrier" onclick="askTopic('GlobalHealth Medicare Advantage 2026: Oklahoma market, plan types, network, dual eligible plans, and key agent considerations')"><div class="c-dot" style="background:#1D9E75"></div>GlobalHealth (OK)</div>
+      <div class="sb-carrier" onclick="askTopic('Arkansas Blue Cross Medicare Advantage 2026: Arkansas market, plan types, provider network, and agent notes')"><div class="c-dot" style="background:#D85A30"></div>Arkansas BCBS</div>
+      <div class="sb-carrier" onclick="askTopic('WPS Health Insurance Medicare Advantage 2026: Wisconsin, Michigan, and surrounding area, plan types, TRS-eligible agents, and star ratings')"><div class="c-dot" style="background:#534AB7"></div>WPS Health (WI/MI)</div>
+      <div class="sb-carrier" onclick="askTopic('SelectHealth Medicare Advantage 2026: Utah and surrounding Mountain West states, Intermountain Health affiliation, plan types, star ratings')"><div class="c-dot" style="background:#3B6D11"></div>SelectHealth (UT)</div>
+      <div class="sb-carrier" onclick="askTopic('Rocky Mountain Health Plans Medicare Advantage 2026: Colorado market, Grand Valley focus, plan types, provider network, star ratings')"><div class="c-dot" style="background:#3C3489"></div>Rocky Mountain (CO)</div>
+      <div class="sb-carrier" onclick="askTopic('Sanford Health Medicare Advantage 2026: Dakotas and upper Midwest, provider-sponsored HMO, plan types, rural coverage, and agent notes')"><div class="c-dot" style="background:#639922"></div>Sanford Health (Dakotas)</div>
+      <div class="sb-carrier" onclick="askTopic('CHRISTUS Health Plan Medicare Advantage 2026: Texas and Louisiana markets, Catholic health system model, plan types, and agent considerations')"><div class="c-dot" style="background:#A32D2D"></div>CHRISTUS Health (TX/LA)</div>
+      <div class="sb-carrier" onclick="askTopic('SummaCare Medicare Advantage 2026: Northeast Ohio market, Summa Health System affiliation, plan types, and star ratings')"><div class="c-dot" style="background:#185FA5"></div>SummaCare (OH)</div>
+      <div class="sb-carrier" onclick="askTopic('Prominence Health Plan Medicare Advantage 2026: Nevada and surrounding states, plan types, provider network, star ratings, and agent notes')"><div class="c-dot" style="background:#EF9F27"></div>Prominence Health (NV)</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT AREA -->
+  <div class="main">
+
+    <!-- CHAT PANEL -->
+    <div id="chat-panel">
+      <div class="messages" id="messages"></div>
+      <div class="input-area">
+        <div class="input-row">
+          <textarea class="chat-input" id="userInput" placeholder="Ask any Medicare question — carrier, plan, enrollment, compliance, costs, scenarios..." rows="1"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+            <svg viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </div>
+        <div class="hint-chips">
+          <div class="chip" onclick="useHint(this)">2026 Part B premium</div>
+          <div class="chip" onclick="useHint(this)">AEP Oct 15 – Dec 7</div>
+          <div class="chip" onclick="useHint(this)">D-SNP monthly SEP</div>
+          <div class="chip" onclick="useHint(this)">Part D $2,000 cap</div>
+          <div class="chip" onclick="useHint(this)">Missed IEP options</div>
+          <div class="chip" onclick="useHint(this)">IRMAA appeal steps</div>
+          <div class="chip" onclick="useHint(this)">TPMO disclaimer</div>
+        </div>
+        <div class="disclaimer">⚠️ For licensed agent use only · Not for beneficiary distribution · Always verify plan-specific details with carrier and Medicare Plan Finder · Not legal or compliance advice</div>
+      </div>
+    </div>
+
+    <!-- 2026 COSTS -->
+    <div id="costs-panel" class="view-panel">
+      <div style="max-width:680px">
+        <div class="view-h2">2026 Medicare Cost Reference</div>
+        <div class="alert alert-blue">All figures are official CMS-released amounts effective January 1, 2026.</div>
+        <div class="view-card">
+          <h3>Part A — Hospital Insurance</h3>
+          <div class="vgrid" style="margin-top:10px">
+            <div class="vstat"><div class="vstat-label">Hospital Deductible / benefit period</div><div class="vstat-val">$1,736</div><div class="vstat-note">↑ $60 from $1,676 in 2025</div></div>
+            <div class="vstat"><div class="vstat-label">Days 61–90 Daily Coinsurance</div><div class="vstat-val">$434/day</div><div class="vstat-note">↑ from $419 in 2025</div></div>
+            <div class="vstat"><div class="vstat-label">Lifetime Reserve Days</div><div class="vstat-val">$868/day</div><div class="vstat-note">↑ from $838 in 2025</div></div>
+            <div class="vstat"><div class="vstat-label">SNF Days 21–100 Coinsurance</div><div class="vstat-val">$217/day</div><div class="vstat-note">↑ from $209.50 in 2025</div></div>
+          </div>
+          <p>Premium: <strong>$0</strong> (40+ quarters) · <strong>$311/mo</strong> (30–39 quarters) · <strong>$565/mo</strong> (&lt;30 quarters)</p>
+        </div>
+        <div class="view-card">
+          <h3>Part B — Medical Insurance</h3>
+          <div class="vgrid" style="margin-top:10px">
+            <div class="vstat"><div class="vstat-label">Standard Monthly Premium</div><div class="vstat-val">$202.90</div><div class="vstat-note">↑ $17.90 from $185.00 in 2025</div></div>
+            <div class="vstat"><div class="vstat-label">Annual Deductible</div><div class="vstat-val">$283</div><div class="vstat-note">↑ $26 from $257 in 2025</div></div>
+          </div>
+        </div>
+        <div class="view-card">
+          <h3>Part B IRMAA Brackets — 2026</h3>
+          <p style="font-size:12px;color:var(--tm);margin:4px 0 8px">Based on 2024 MAGI · Affects ~8% of beneficiaries</p>
+          <table style="width:100%;font-size:12.5px;border-collapse:collapse">
+            <thead><tr style="background:var(--bg2)"><th style="text-align:left;padding:6px 8px;font-size:11px;font-weight:600;color:var(--tm)">Individual MAGI</th><th style="text-align:left;padding:6px 8px;font-size:11px;font-weight:600;color:var(--tm)">Joint MAGI</th><th style="text-align:right;padding:6px 8px;font-size:11px;font-weight:600;color:var(--tm)">Monthly Premium</th></tr></thead>
+            <tbody>
+              <tr style="border-top:0.5px solid var(--b)"><td style="padding:5px 8px">≤ $109,000</td><td style="padding:5px 8px">≤ $218,000</td><td style="padding:5px 8px;text-align:right;font-weight:600">$202.90</td></tr>
+              <tr style="border-top:0.5px solid var(--b);background:var(--bg2)"><td style="padding:5px 8px">$109,001–$137,000</td><td style="padding:5px 8px">$218,001–$274,000</td><td style="padding:5px 8px;text-align:right;font-weight:600">$284.10</td></tr>
+              <tr style="border-top:0.5px solid var(--b)"><td style="padding:5px 8px">$137,001–$164,000</td><td style="padding:5px 8px">$274,001–$328,000</td><td style="padding:5px 8px;text-align:right;font-weight:600">$446.30</td></tr>
+              <tr style="border-top:0.5px solid var(--b);background:var(--bg2)"><td style="padding:5px 8px">$164,001–$191,000</td><td style="padding:5px 8px">$328,001–$382,000</td><td style="padding:5px 8px;text-align:right;font-weight:600">$568.50</td></tr>
+              <tr style="border-top:0.5px solid var(--b)"><td style="padding:5px 8px">$191,001–$500,000</td><td style="padding:5px 8px">$382,001–$750,000</td><td style="padding:5px 8px;text-align:right;font-weight:600">$649.20</td></tr>
+              <tr style="border-top:0.5px solid var(--b);background:var(--bg2)"><td style="padding:5px 8px">&gt; $500,000</td><td style="padding:5px 8px">&gt; $750,000</td><td style="padding:5px 8px;text-align:right;font-weight:600">$689.90</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:12px;color:var(--tm);margin-top:8px">Part D IRMAA surcharge: <strong>$14.50–$91.00/mo</strong> added on top of plan premium (same income brackets)</p>
+        </div>
+        <div class="view-card">
+          <h3>MA National Market — 2026</h3>
+          <div class="vgrid" style="margin-top:10px">
+            <div class="vstat"><div class="vstat-label">Total MA Plans Nationwide</div><div class="vstat-val">~5,555</div><div class="vstat-note">↓ from 5,633 in 2025</div></div>
+            <div class="vstat"><div class="vstat-label">Avg Options / Beneficiary</div><div class="vstat-val">39</div><div class="vstat-note">↓ from 42 in 2025</div></div>
+            <div class="vstat"><div class="vstat-label">Total D-SNPs</div><div class="vstat-val">1,019</div><div class="vstat-note">↑ 19% — nearly 2× since 2020</div></div>
+            <div class="vstat"><div class="vstat-label">Total C-SNPs</div><div class="vstat-val">548</div><div class="vstat-note">↑ 44% from 2025</div></div>
+          </div>
+          <div class="alert alert-amber" style="margin-top:10px">CMS increased avg MA payments 5.06% ($25B) for 2026. Despite this, major carriers retracted footprints due to elevated utilization and margin pressure.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL CARRIERS -->
+    <div id="carriers-panel" class="view-panel">
+      <div style="max-width:780px">
+        <div class="view-h2">National Carrier Database — 2026</div>
+        <div class="alert alert-blue">Click any carrier to ask the AI. Plan availability always varies by county — verify at Medicare.gov Plan Finder or call the carrier directly.</div>
+        <div class="search-wrap">
+          <div class="search-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+          <input class="search-input" placeholder="Search carriers by name or region..." oninput="filterCards(this.value)">
+        </div>
+        <p style="font-size:11px;font-weight:600;color:var(--tt);text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px">National &amp; Multi-State Carriers</p>
+        <div class="carrier-grid" id="nat-grid"></div>
+        <p style="font-size:11px;font-weight:600;color:var(--tt);text-transform:uppercase;letter-spacing:.07em;margin:10px 0 9px">Regional Carriers — All 50 States</p>
+        <div class="carrier-grid" id="reg-grid"></div>
+        <div class="alert alert-amber" style="margin-top:10px">The full MA market includes hundreds of additional local and provider-sponsored organizations not listed here. This database covers the most significant carriers agents encounter nationally. Use the CMS MA Plan Directory at cms.gov for exhaustive county-level data.</div>
+      </div>
+    </div>
+
+    <!-- ENROLLMENT -->
+    <div id="enroll-panel" class="view-panel">
+      <div style="max-width:680px">
+        <div class="view-h2">Enrollment Periods — 2026</div>
+        <div class="view-card"><h3>Initial Enrollment Period (IEP)</h3><p>7-month window: 3 months before + birthday month + 3 months after turning 65. No late enrollment penalty. Coverage start depends on which month they enroll. Best time to get Part A, B, and choose a plan.</p></div>
+        <div class="view-card"><h3>Annual Enrollment Period (AEP)</h3><div style="display:inline-block;background:var(--blue3);color:var(--blue);font-weight:600;font-size:13px;padding:3px 12px;border-radius:16px;margin:5px 0 8px">Oct 15 – Dec 7, 2026 → Effective Jan 1, 2027</div><ul><li>All Medicare beneficiaries may enroll in, switch, or drop MA/Part D plans</li><li>Peak agent selling season — SOA required 48 hrs in advance</li><li>Annual Notice of Change (ANOC) sent by Sept 30 — review with clients</li></ul></div>
+        <div class="view-card"><h3>Medicare Advantage Open Enrollment Period (OEP)</h3><div style="display:inline-block;background:var(--teal2);color:var(--teal3);font-weight:600;font-size:13px;padding:3px 12px;border-radius:16px;margin:5px 0 8px">Jan 1 – Mar 31, 2026 → Effective 1st of following month</div><ul><li>Current MA enrollees only — switch MA plans or return to Original Medicare + PDP</li><li>Cannot use to enroll in MA for the first time</li><li>One change allowed per OEP</li></ul></div>
+        <div class="view-card"><h3>General Enrollment Period (GEP)</h3><div style="display:inline-block;background:var(--bg3);color:var(--t);font-size:13px;font-weight:600;padding:3px 12px;border-radius:16px;margin:5px 0 8px">Jan 1 – Mar 31 → Coverage starts July 1</div><ul><li>For those who missed IEP — enroll in Part A and/or Part B</li><li>Late enrollment penalties may apply</li><li>May then enroll in MA plan or PDP during concurrent period</li></ul></div>
+        <div class="view-card"><h3>Special Enrollment Periods (SEPs)</h3><ul>
+          <li><strong>Loss of employer/union coverage:</strong> 8-month SEP for Part B; 63-day SEP for Part D/MA</li>
+          <li><strong>Move out of plan service area:</strong> 2 months before to 2 months after</li>
+          <li><strong>Plan terminates or loses contract:</strong> 2-month SEP</li>
+          <li><strong>Gain or lose Medicaid (Dual Eligible):</strong> Monthly SEP — no lock-in period</li>
+          <li><strong>LIS/Extra Help determination:</strong> Quarterly SEP</li>
+          <li><strong>Newly qualify for D-SNP, C-SNP, or I-SNP:</strong> Monthly continuous SEP</li>
+          <li><strong>Enter or leave nursing home / LTC facility:</strong> Monthly SEP</li>
+          <li><strong>5-Star Plan SEP:</strong> Dec 8 – Nov 30 — switch to 5-star plan once per year</li>
+          <li><strong>Exceptional circumstances:</strong> FEMA disaster, plan error, or CMS-approved event</li>
+          <li><strong>PACE enrollment:</strong> Any time if available in area</li>
+        </ul></div>
+        <div class="view-card"><h3>Late Enrollment Penalties (LEP)</h3><ul>
+          <li><strong>Part B:</strong> 10% of standard premium for each full 12-month period without coverage — permanent</li>
+          <li><strong>Part D:</strong> 1% of national base beneficiary premium × number of months without creditable coverage — permanent and added to monthly premium</li>
+          <li><strong>Part A:</strong> 10% premium penalty × 2 years of delay (applies only to those who must pay a premium)</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <!-- PART D -->
+    <div id="partd-panel" class="view-panel">
+      <div style="max-width:680px">
+        <div class="view-h2">Part D — 2026 Complete Reference</div>
+        <div class="alert alert-teal">The IRA (Inflation Reduction Act) fully restructured Part D benefit design for 2026. This is one of the biggest talking points with clients this year.</div>
+        <div class="view-card"><h3>2026 Part D Benefit Structure</h3><ul>
+          <li><strong>Deductible phase:</strong> Max deductible $590 — many plans waive partially or fully</li>
+          <li><strong>Initial coverage:</strong> Pay copays/coinsurance until $2,000 total OOP reached</li>
+          <li><strong>Catastrophic coverage:</strong> After $2,000 OOP — $0 cost sharing for remainder of year</li>
+          <li><strong>Coverage gap eliminated:</strong> No "donut hole" in 2026</li>
+          <li><strong>Insulin:</strong> Max $35/mo per covered product; Part D deductible does NOT apply to insulin</li>
+          <li><strong>Vaccines:</strong> $0 cost-sharing for all ACIP-recommended vaccines under Part D</li>
+        </ul></div>
+        <div class="view-card"><h3>Medicare Prescription Payment Plan (M3P)</h3><ul>
+          <li>Allows beneficiaries to spread annual OOP drug costs into equal monthly payments</li>
+          <li><strong>Auto-renewal now active</strong> — 2025 enrollees automatically continue in 2026 unless they opt out</li>
+          <li>Available to all Part D enrollees (MA-PD and stand-alone PDP)</li>
+          <li><strong>Agent tip:</strong> Ideal for clients on specialty or high-cost drugs — eliminates large January cost spikes</li>
+        </ul></div>
+        <div class="view-card"><h3>LIS / Extra Help — 2026</h3><ul>
+          <li><strong>Full subsidy:</strong> Income ≤135% FPL + limited resources — $0 premium, deductible, very low copays</li>
+          <li><strong>Partial subsidy:</strong> Income 135–150% FPL — reduced premiums and cost sharing</li>
+          <li>Auto-enrollment: SSA auto-enrolls eligible Medicaid/MSP recipients into a benchmark Part D plan</li>
+          <li>Quarterly SEP for LIS beneficiaries — can switch plans once per quarter (Jan, Apr, Jul, Oct)</li>
+          <li><strong>Apply via:</strong> SSA at ssa.gov, call 1-800-772-1213, or via Social Security office</li>
+          <li>Wellcare and Centene received largest share of LIS auto-enrollment in 2026</li>
+        </ul></div>
+        <div class="view-card"><h3>PDP Market 2026 — 5 Carriers = 94% of Plans</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0">
+            <span class="badge"><span class="badge-dot" style="background:#D85A30"></span>Aetna — SilverScript Choice (open network)</span>
+            <span class="badge"><span class="badge-dot" style="background:#639922"></span>HCSC — Assurance Rx, Extra Rx</span>
+            <span class="badge"><span class="badge-dot" style="background:#1D9E75"></span>Humana — Basic Rx, Premier Rx, Value Rx</span>
+            <span class="badge"><span class="badge-dot" style="background:#185FA5"></span>UHC — AARP Rx Preferred, AARP Rx Saver</span>
+            <span class="badge"><span class="badge-dot" style="background:#534AB7"></span>Wellcare — Classic, Value Script</span>
+          </div>
+          <p style="font-size:12.5px;color:var(--tm)">Carriers that exited the PDP market: Cigna, Clear Spring Health, Elevance Health, Mutual of Omaha. Average stand-alone PDP: $34.50/mo (↓ from $38.31). Average MA-PD (after rebate): $11.50/mo.</p>
+        </div>
+        <div class="view-card"><h3>Part D Key Cost Numbers 2026</h3>
+          <div class="vgrid" style="margin-top:8px">
+            <div class="vstat"><div class="vstat-label">OOP Catastrophic Cap</div><div class="vstat-val">$2,000</div><div class="vstat-note">No more coverage gap</div></div>
+            <div class="vstat"><div class="vstat-label">Insulin Max Cost-Share</div><div class="vstat-val">$35/mo</div><div class="vstat-note">Per covered insulin product</div></div>
+            <div class="vstat"><div class="vstat-label">Avg Stand-alone PDP</div><div class="vstat-val">$34.50/mo</div><div class="vstat-note">↓ from $38.31 in 2025</div></div>
+            <div class="vstat"><div class="vstat-label">Avg MA-PD (after rebate)</div><div class="vstat-val">$11.50/mo</div><div class="vstat-note">↓ from $13.32 in 2025</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDIGAP -->
+    <div id="medigap-panel" class="view-panel">
+      <div style="max-width:720px">
+        <div class="view-h2">Medigap / Medicare Supplement — 2026</div>
+        <div class="alert alert-blue">Medigap plans are federally standardized — Plan G from Carrier A covers the same benefits as Plan G from Carrier B. Only premiums, service, and financial strength differ.</div>
+        <div class="view-card">
+          <h3>Standardized Plans — Coverage Comparison</h3>
+          <table class="mg-table">
+            <thead><tr><th>Plan</th><th>Part A Coins.</th><th>Part A Ded.</th><th>Part B Coins.</th><th>Part B Ded.</th><th>Skilled Nursing</th><th>Foreign Travel</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><strong>A</strong></td><td class="check">✓</td><td class="cross">—</td><td class="check">✓</td><td class="cross">—</td><td class="cross">—</td><td class="cross">—</td><td style="font-size:11px;color:var(--tm)">Basic only</td></tr>
+              <tr><td><strong>B</strong></td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">—</td><td class="cross">—</td><td class="cross">—</td><td style="font-size:11px;color:var(--tm)">+ Part A ded.</td></tr>
+              <tr><td><strong>C*</strong></td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td style="font-size:11px;color:var(--tm)">Pre-Jan 2020 only</td></tr>
+              <tr><td><strong>D</strong></td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">—</td><td class="check">✓</td><td class="check">✓</td><td style="font-size:11px;color:var(--tm)">Less popular</td></tr>
+              <tr><td><strong>F*</strong></td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td style="font-size:11px;color:var(--tm)">Pre-Jan 2020 only</td></tr>
+              <tr><td><strong>G</strong></td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">—</td><td class="check">✓</td><td class="check">✓</td><td style="font-size:11px;color:var(--tm)">Most popular new</td></tr>
+              <tr><td><strong>K</strong></td><td class="check">✓</td><td style="font-size:11px">50%</td><td style="font-size:11px">50%</td><td class="cross">—</td><td style="font-size:11px">50%</td><td class="cross">—</td><td style="font-size:11px;color:var(--tm)">Low prem; OOP max</td></tr>
+              <tr><td><strong>L</strong></td><td class="check">✓</td><td style="font-size:11px">75%</td><td style="font-size:11px">75%</td><td class="cross">—</td><td style="font-size:11px">75%</td><td class="cross">—</td><td style="font-size:11px;color:var(--tm)">OOP max applies</td></tr>
+              <tr><td><strong>M</strong></td><td class="check">✓</td><td style="font-size:11px">50%</td><td class="check">✓</td><td class="cross">—</td><td class="check">✓</td><td class="check">✓</td><td style="font-size:11px;color:var(--tm)">Uncommon</td></tr>
+              <tr><td><strong>N</strong></td><td class="check">✓</td><td class="check">✓</td><td class="check">✓**</td><td class="cross">—</td><td class="check">✓</td><td class="check">✓</td><td style="font-size:11px;color:var(--tm)">Growing; copays apply</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:11.5px;color:var(--tm);margin-top:8px">* Plans C and F unavailable to beneficiaries first eligible after Jan 1, 2020 &nbsp;|&nbsp; ** Plan N: copays up to $20 office visit, $50 ER (if not admitted)</p>
+        </div>
+        <div class="view-card"><h3>Key Medigap Rules for Agents</h3><ul>
+          <li><strong>Open Enrollment (OE):</strong> 6-month window starting when enrolled in Part B at age 65+ — guaranteed issue, no underwriting</li>
+          <li><strong>Outside OE:</strong> Medical underwriting typically applies — carriers can decline or surcharge</li>
+          <li><strong>Guaranteed Issue Rights:</strong> Available in specific situations (e.g., MA plan leaves area, employer coverage ends, plan becomes insolvent)</li>
+          <li><strong>Birthday Rule:</strong> CA, ID, IL, KY, LA, MD, NV, OK, OR — allows switching to same or lesser plan on birthday without underwriting. Check state-specific rules.</li>
+          <li><strong>No drug coverage:</strong> Medigap does NOT include Part D — clients must enroll in a separate PDP</li>
+          <li><strong>No network:</strong> Any Medicare-accepting provider nationwide — ideal for travelers or those seeing many specialists</li>
+          <li><strong>Community vs attained-age vs issue-age pricing:</strong> Understand which rating method carriers use in each state</li>
+          <li><strong>Top carriers nationally:</strong> Mutual of Omaha, Aetna, UHC/AARP, Humana, Cigna/HealthSpring, BCBS affiliates, Colonial Penn, GPM Life, Transamerica, Globe Life</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <!-- COMPLIANCE -->
+    <div id="comply-panel" class="view-panel">
+      <div style="max-width:680px">
+        <div class="view-h2">CMS Compliance — Agent Quick Reference</div>
+        <div class="alert alert-amber">General reference only. Always consult your carrier's compliance department and the current CMS Medicare Communications and Marketing Guidelines (MCMG) for authoritative guidance.</div>
+        <div class="view-card"><h3>Scope of Appointment (SOA)</h3><ul>
+          <li>Required before all MA/PDP marketing or sales appointments</li>
+          <li>Must be completed <strong>at least 48 hours before appointment</strong> — exceptions: walk-in events, beneficiary-initiated same-day contact</li>
+          <li>Only discuss plan types the beneficiary agreed to discuss on the SOA</li>
+          <li>Retain SOA documentation for <strong>10 years</strong></li>
+          <li>Accepted formats: paper, electronic signature, phone recording</li>
+        </ul></div>
+        <div class="view-card"><h3>TPMO Required Disclaimer (verbatim)</h3>
+          <div class="alert alert-blue" style="margin-top:8px;font-style:italic;font-size:13px">"We do not offer every plan available in your area. Any information we provide is limited to those plans we do offer in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options."</div>
+          <ul style="margin-top:8px"><li>Must appear at the <strong>start of all marketing/sales calls</strong></li><li>Required on all websites, print materials, and digital communications</li><li>Must disclose number of carriers represented</li><li><strong>Call recording required</strong> for all marketing and enrollment calls</li></ul>
+        </div>
+        <div class="view-card"><h3>Prohibited Marketing Practices</h3><ul>
+          <li>No door-to-door solicitation without prior invitation from the beneficiary</li>
+          <li>No cold calling without prior express permission</li>
+          <li>No marketing in healthcare settings — exam rooms, waiting areas, pharmacy counters</li>
+          <li>No gifts or payments exceeding <strong>$15 per item</strong> or <strong>$75 aggregate per year</strong> to influence enrollment</li>
+          <li>No cash or cash-equivalent gifts (gift cards)</li>
+          <li>No misleading plan comparisons or selectively omitting unfavorable information</li>
+          <li>No marketing outside plan's CMS-approved service area</li>
+          <li>No implying government endorsement via use of Medicare name or CMS logos</li>
+        </ul></div>
+        <div class="view-card"><h3>New 2026 CMS Rule Changes</h3><ul>
+          <li>Plans cannot reverse a previously approved inpatient admission — except obvious error or fraud</li>
+          <li>MA appeals loopholes tightened — plans must honor prior authorization decisions</li>
+          <li>Insulin cost-sharing cap codified at ≤ $35/mo per covered product</li>
+          <li>Automatic election renewal for Medicare Prescription Payment Plan (M3P)</li>
+          <li>Enhanced Medicare Plan Finder — provider directories, more filters, new security features</li>
+          <li>CMS enhanced review of all MA marketing materials before distribution</li>
+        </ul></div>
+        <div class="view-card"><h3>Documentation Best Practices</h3><ul>
+          <li>Retain all SOA forms, call recordings, and enrollment documents for 10 years</li>
+          <li>Always confirm enrollment with carrier — get confirmation number</li>
+          <li>Verify Medicare Part A and B eligibility before every enrollment</li>
+          <li>For dual eligible clients — verify Medicaid status with state agency</li>
+          <li>Keep AHIP certification current — required annually before selling MA/Part D</li>
+          <li>Confirm carrier appointment is active in each state where you are writing business</li>
+          <li>Document all client disclosures, plan discussions, and material changes</li>
+        </ul></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- REFERENCE PANEL -->
+  <div class="ref-panel" id="refPanel">
+    <div class="ref-section">
+      <div class="ref-title">Quick Numbers 2026</div>
+      <div class="ref-card"><div class="ref-card-label">Part B Premium</div><div class="ref-card-value">$202.90/mo</div><div class="ref-card-sub">↑ $17.90 from 2025</div></div>
+      <div class="ref-card"><div class="ref-card-label">Part B Deductible</div><div class="ref-card-value">$283/yr</div><div class="ref-card-sub">↑ $26 from 2025</div></div>
+      <div class="ref-card"><div class="ref-card-label">Part A Hospital Ded.</div><div class="ref-card-value">$1,736</div><div class="ref-card-sub">Per benefit period</div></div>
+      <div class="ref-card"><div class="ref-card-label">Part D OOP Cap</div><div class="ref-card-value">$2,000</div><div class="ref-card-sub">No coverage gap in 2026</div></div>
+      <div class="ref-card"><div class="ref-card-label">Avg MA-PD Premium</div><div class="ref-card-value">$11.50/mo</div><div class="ref-card-sub">After rebate, ↓ from $13.32</div></div>
+      <div class="ref-card"><div class="ref-card-label">SNF Coins. Days 21–100</div><div class="ref-card-value">$217/day</div><div class="ref-card-sub">↑ from $209.50</div></div>
+    </div>
+    <div class="ref-divider"></div>
+    <div class="ref-section" style="padding-top:0">
+      <div class="ref-title">Agent Scenarios</div>
+      <button class="ref-quick-btn" onclick="askTopic('Client turning 65 next month has employer coverage through spouse. Exactly what Medicare steps do they need to take, when, and what happens if they delay Part B?')">Turning 65 with employer coverage<span>IEP timing, SEP rules, penalties</span></button>
+      <button class="ref-quick-btn" onclick="askTopic('Client qualifies for both Medicare and Medicaid (dual eligible). Walk me through D-SNP options, the monthly SEP, Extra Help, and what I need to know as their agent')">Dual eligible client<span>D-SNP, monthly SEP, Extra Help</span></button>
+      <button class="ref-quick-btn" onclick="askTopic('My client is on a Medicare Advantage plan that is being terminated for 2026. What SEP applies, what are their options, and what is the deadline to act?')">Plan terminated for 2026<span>SEP window and options</span></button>
+      <button class="ref-quick-btn" onclick="askTopic('Client wants to leave Medicare Advantage and go back to Original Medicare with a Medigap plan. What are the steps, guaranteed issue rights, timing, and potential issues?')">MA → Original Medicare + Medigap<span>GI rights, timing, underwriting</span></button>
+      <button class="ref-quick-btn" onclick="askTopic('Give me a full needs-assessment framework — what questions should I ask every new Medicare client to determine the best coverage for their situation?')">New client needs assessment<span>Full intake framework</span></button>
+      <button class="ref-quick-btn" onclick="askTopic('Client received an IRMAA notice and wants to appeal. What qualifies as a life-changing event, what form do they need, and walk me through the step-by-step process?')">IRMAA appeal — step by step<span>Life events, SSA process, forms</span></button>
+      <button class="ref-quick-btn" onclick="askTopic('Explain the 2026 Part D $2,000 OOP cap in simple terms a client can understand. Give me the key talking points I should use.')">Explain Part D cap to clients<span>Simple talking points</span></button>
+    </div>
+  </div>
+
+</div><!-- /body -->
+</div><!-- /app -->
+
+<script>
+// ── CARRIER DATA ──
+const NAT_CARRIERS = [
+  {name:'UnitedHealthcare',region:'48 states + DC',states:'2,597 counties',color:'#185FA5',tag:'National',tagClass:'tag-nat',q:'UnitedHealthcare Medicare Advantage 2026 national footprint by state, plan types, D-SNP, C-SNP, AARP PDPs, star ratings, network issues, and key agent considerations'},
+  {name:'Humana',region:'46 states + DC',states:'85% of U.S. counties',color:'#1D9E75',tag:'National',tagClass:'tag-nat',q:'Humana Medicare Advantage 2026 national footprint by state, plan types, Part B giveback, star ratings, ESRD benefits, CarePlus subsidiary, and PDP lineup'},
+  {name:'Aetna / CVS Health',region:'43 states + DC',states:'2,159 counties',color:'#D85A30',tag:'National',tagClass:'tag-nat',q:'Aetna CVS Health Medicare Advantage 2026 national footprint, highest star ratings, SNP expansion, Extra Benefits Card, SilverScript PDP'},
+  {name:'Wellcare / Centene',region:'32 states',states:'1,850 counties',color:'#534AB7',tag:'National',tagClass:'tag-nat',q:'Wellcare Centene Medicare Advantage 2026 national footprint, LIS auto-enrollment, Rewards Card, dual eligible focus, PDPs'},
+  {name:'Devoted Health',region:'29 states',states:'C-SNP expansion +965 counties',color:'#EF9F27',tag:'National',tagClass:'tag-nat',q:'Devoted Health Medicare Advantage 2026 national presence, C-SNP massive expansion, $0 premiums, tech model'},
+  {name:'Elevance / Anthem',region:'Expanding nationally',states:'WellPoint, Healthy Blue brands',color:'#3B6D11',tag:'National',tagClass:'tag-nat',q:'Elevance Anthem Blue Cross Medicare Advantage 2026 national footprint expansion, exit from PDP market, WellPoint, Healthy Blue brands'},
+  {name:'HealthSpring / HCSC',region:'Selected markets',states:'Formerly Cigna MA',color:'#639922',tag:'National',tagClass:'tag-nat',q:'HealthSpring HCSC formerly Cigna Medicare Advantage 2026 rebrand, markets served, PDPs, star ratings, transition notes'},
+  {name:'Kaiser Permanente',region:'8 states + DC',states:'CA, CO, GA, HI, MD, OR, VA, WA',color:'#A32D2D',tag:'National',tagClass:'tag-nat',q:'Kaiser Permanente Medicare Advantage 2026 integrated HMO model, 8-state footprint, star ratings, direct enrollment'},
+  {name:'Molina Healthcare',region:'Multi-state',states:'Medicaid heritage carrier',color:'#0F6E56',tag:'National',tagClass:'tag-nat',q:'Molina Healthcare Medicare Advantage 2026 multi-state footprint, dual eligible and low-income focus, D-SNP and C-SNP by state'},
+  {name:'Mutual of Omaha',region:'Nationwide',states:'Medigap leader',color:'#3C3489',tag:'Medigap',tagClass:'tag-medi',q:'Mutual of Omaha Medicare Supplement Medigap 2026 plan lineup, financial strength, pricing, and national availability'},
+  {name:'WellPoint',region:'Select states',states:'Elevance brand',color:'#185FA5',tag:'National',tagClass:'tag-nat',q:'WellPoint Medicare Advantage 2026 relationship to Elevance Health and Anthem family of brands, states served'},
+  {name:'Healthy Blue',region:'Select states',states:'Dual eligible focus',color:'#1D9E75',tag:'National',tagClass:'tag-nat',q:'Healthy Blue Medicare Advantage 2026 states offered, Blue Cross connection, dual eligible plans, agent notes'},
+];
+
+const REG_CARRIERS = [
+  // West / Southwest
+  {name:'SCAN Health Plan',region:'CA, AZ, NV, TX',states:'Senior-focused non-profit',color:'#3B6D11',tag:'West',tagClass:'tag-reg',q:'SCAN Health Plan Medicare Advantage 2026 California and Southwest, senior non-profit model, plan types, star ratings'},
+  {name:'Blue Shield of CA',region:'California',states:'Large CA market carrier',color:'#185FA5',tag:'West',tagClass:'tag-reg',q:'Blue Shield of California Medicare Advantage 2026 California market, plan types, provider network, star ratings'},
+  {name:'Health Net',region:'CA + select Western',states:'Centene subsidiary',color:'#D85A30',tag:'West',tagClass:'tag-reg',q:'Health Net Medicare Advantage 2026 California and Western states, Centene subsidiary, dual eligible focus, plan types'},
+  {name:'Aspire Health Plan',region:'Monterey Bay, CA',states:'Regional HMO',color:'#EF9F27',tag:'West',tagClass:'tag-reg',q:'Aspire Health Plan Medicare Advantage 2026 Monterey Bay California, plan types, network, agent considerations'},
+  {name:'SelectHealth',region:'UT, ID, NV',states:'Intermountain Health',color:'#534AB7',tag:'Mountain West',tagClass:'tag-reg',q:'SelectHealth Medicare Advantage 2026 Utah Idaho Nevada, Intermountain Health affiliation, plan types, star ratings'},
+  {name:'Rocky Mountain Health',region:'Colorado',states:'Grand Valley focus',color:'#3C3489',tag:'Mountain West',tagClass:'tag-reg',q:'Rocky Mountain Health Plans Medicare Advantage 2026 Colorado, plan types, provider network, star ratings'},
+  {name:'Prominence Health Plan',region:'NV + surrounding',states:'Nevada-based carrier',color:'#639922',tag:'Mountain West',tagClass:'tag-reg',q:'Prominence Health Plan Medicare Advantage 2026 Nevada and surrounding states, plan types, network, star ratings'},
+  // Pacific Northwest
+  {name:'Premera Blue Cross',region:'WA, AK',states:'Pacific Northwest leader',color:'#0C447C',tag:'Northwest',tagClass:'tag-reg',q:'Premera Blue Cross Medicare Advantage 2026 Washington and Alaska Pacific Northwest, plan types, network, 2026 offerings'},
+  {name:'Regence BCBS',region:'OR, WA, ID, UT',states:'Pacific Northwest Blue',color:'#534AB7',tag:'Northwest',tagClass:'tag-reg',q:'Regence BlueCross BlueShield Medicare Advantage 2026 Oregon Washington Idaho Utah, plan types, network, agent notes'},
+  {name:'Providence Health Plan',region:'OR, WA',states:'Integrated health system',color:'#1D9E75',tag:'Northwest',tagClass:'tag-reg',q:'Providence Health Plan Medicare Advantage 2026 Oregon Washington, integrated health system model, plan types, star ratings'},
+  // Midwest
+  {name:'Medica',region:'MN, ND, SD, NE, KS, WI, IA',states:'Upper Midwest leader',color:'#3C3489',tag:'Midwest',tagClass:'tag-reg',q:'Medica Medicare Advantage 2026 Minnesota and Midwest states, plan types, star ratings, agent tips'},
+  {name:'UCare',region:'Minnesota',states:'Provider-connected',color:'#639922',tag:'Midwest',tagClass:'tag-reg',q:'UCare Medicare Advantage 2026 Minnesota market, provider-connected model, plan types, star ratings'},
+  {name:'Dean Health Plan',region:'Wisconsin',states:'SSM Health affiliated',color:'#A32D2D',tag:'Midwest',tagClass:'tag-reg',q:'Dean Health Plan Medicare Advantage 2026 Wisconsin, SSM Health affiliation, HMO plans, star ratings'},
+  {name:'Quartz',region:'WI, IA, IL, MN',states:'Multi-state Midwest',color:'#EF9F27',tag:'Midwest',tagClass:'tag-reg',q:'Quartz Medicare Advantage 2026 Wisconsin and surrounding Midwest states, provider-sponsored HMO, plan types'},
+  {name:'Sanford Health',region:'ND, SD, MN, IA',states:'Rural Midwest leader',color:'#185FA5',tag:'Midwest',tagClass:'tag-reg',q:'Sanford Health Medicare Advantage 2026 Dakotas and upper Midwest, provider-sponsored, rural coverage, plan types'},
+  {name:'WPS Health Insurance',region:'WI, MI, IL',states:'Tricare-experienced carrier',color:'#534AB7',tag:'Midwest',tagClass:'tag-reg',q:'WPS Health Insurance Medicare Advantage 2026 Wisconsin Michigan Illinois, plan types, star ratings, agent notes'},
+  {name:'SummaCare',region:'Northeast Ohio',states:'Summa Health affiliated',color:'#3B6D11',tag:'Midwest',tagClass:'tag-reg',q:'SummaCare Medicare Advantage 2026 Northeast Ohio, Summa Health System affiliation, plan types, star ratings'},
+  {name:'Priority Health',region:'Michigan',states:'Large MI carrier',color:'#D85A30',tag:'Midwest',tagClass:'tag-reg',q:'Priority Health Medicare Advantage 2026 Michigan market, HMO and PPO plans, star ratings, network'},
+  {name:'Health Alliance Plan',region:'Michigan',states:'Henry Ford Health affiliated',color:'#3C3489',tag:'Midwest',tagClass:'tag-reg',q:'Health Alliance Plan Medicare Advantage 2026 Michigan, Henry Ford Health System, plan types, star ratings'},
+  // Northeast
+  {name:'Capital Blue Cross',region:'PA + surrounding',states:'BCBS affiliate',color:'#A32D2D',tag:'Northeast',tagClass:'tag-reg',q:'Capital Blue Cross Medicare Advantage 2026 Pennsylvania and surrounding Northeast, plan types, network, star ratings'},
+  {name:'Highmark BCBS',region:'PA, WV, DE',states:'Major BCBS affiliate',color:'#185FA5',tag:'Northeast',tagClass:'tag-reg',q:'Highmark Blue Cross Medicare Advantage 2026 Pennsylvania West Virginia Delaware, plan types, network, 2026 updates'},
+  {name:'Independence BC',region:'Philadelphia area PA',states:'Largest PA private insurer',color:'#534AB7',tag:'Northeast',tagClass:'tag-reg',q:'Independence Blue Cross Medicare Advantage 2026 Philadelphia and surrounding Pennsylvania, plan types, network, star ratings'},
+  {name:'Tufts Health Plan',region:'New England',states:'MA, RI, NH focus',color:'#3B6D11',tag:'Northeast',tagClass:'tag-reg',q:'Tufts Health Plan Medicare Advantage 2026 New England Massachusetts and surrounding states, plan types, star ratings'},
+  {name:'Fallon Health',region:'Massachusetts',states:'Central MA HMO',color:'#639922',tag:'Northeast',tagClass:'tag-reg',q:'Fallon Health Medicare Advantage 2026 Massachusetts, plan types, provider network, star ratings'},
+  {name:'CDPHP',region:'Northeast New York',states:'Albany/Capital Region',color:'#EF9F27',tag:'Northeast',tagClass:'tag-reg',q:'CDPHP Medicare Advantage 2026 Northeastern New York Albany Capital Region, plan types, network, star ratings'},
+  {name:'MVP Health Care',region:'NY, VT',states:'Upstate NY focus',color:'#A32D2D',tag:'Northeast',tagClass:'tag-reg',q:'MVP Health Care Medicare Advantage 2026 New York and Vermont, plan types, star ratings, agent considerations'},
+  {name:'Harvard Pilgrim',region:'New England',states:'MA, ME, NH',color:'#185FA5',tag:'Northeast',tagClass:'tag-reg',q:'Harvard Pilgrim Health Care Medicare Advantage 2026 New England Massachusetts Maine New Hampshire, plan types, star ratings'},
+  // South / Southeast
+  {name:'Florida Blue Medicare',region:'Florida',states:'Largest FL Blue carrier',color:'#185FA5',tag:'Southeast',tagClass:'tag-reg',q:'Florida Blue Medicare 2026 Florida statewide market, HMO and PPO options, star ratings, network, agent considerations'},
+  {name:'Freedom Health',region:'Florida',states:'5.0 Part C stars 2026',color:'#D85A30',tag:'Southeast',tagClass:'tag-reg',q:'Freedom Health Medicare Advantage 2026 Florida, 5-star rating, OTC allowances, J.D. Power satisfaction, Elevance connection'},
+  {name:'Optimum HealthCare',region:'Florida',states:'FL HMO dual focus',color:'#534AB7',tag:'Southeast',tagClass:'tag-reg',q:'Optimum HealthCare Medicare Advantage 2026 Florida, dual eligible focus, D-SNP, counties served, plan types'},
+  {name:'Simply Healthcare',region:'Florida',states:'Centene/Medicaid heritage',color:'#1D9E75',tag:'Southeast',tagClass:'tag-reg',q:'Simply Healthcare Plans Medicare Advantage 2026 Florida, Centene subsidiary, dual eligible, Medicaid coordination'},
+  {name:'HealthSun',region:'Florida',states:'South FL HMO',color:'#EF9F27',tag:'Southeast',tagClass:'tag-reg',q:'HealthSun Health Plans Medicare Advantage 2026 Florida, plan types, star ratings, South Florida counties'},
+  {name:'BayCare Health Plans',region:'Tampa Bay, FL',states:'Hospital-sponsored HMO',color:'#3B6D11',tag:'Southeast',tagClass:'tag-reg',q:'BayCare Health Plans Medicare Advantage 2026 Tampa Bay Florida, hospital-sponsored HMO, star ratings, network'},
+  {name:'Health First',region:'Space Coast, FL',states:'Brevard County FL',color:'#3C3489',tag:'Southeast',tagClass:'tag-reg',q:'Health First Health Plans Medicare Advantage 2026 Space Coast Florida Brevard County, HMO, provider-sponsored'},
+  {name:'Capital Health Plan',region:'Tallahassee, FL',states:'North FL leader',color:'#639922',tag:'Southeast',tagClass:'tag-reg',q:'Capital Health Plan Medicare Advantage 2026 Tallahassee Florida, HMO, long-standing carrier, star ratings'},
+  {name:'CHRISTUS Health Plan',region:'TX, LA, NM',states:'Catholic health system',color:'#D85A30',tag:'South',tagClass:'tag-reg',q:'CHRISTUS Health Plan Medicare Advantage 2026 Texas Louisiana New Mexico, Catholic health system, plan types'},
+  {name:'Baylor Scott & White',region:'Texas',states:'Provider-sponsored TX',color:'#534AB7',tag:'South',tagClass:'tag-reg',q:'Baylor Scott and White Health Plan Medicare Advantage 2026 Texas, provider-sponsored, large hospital network, plan types'},
+  {name:'GlobalHealth',region:'Oklahoma',states:'Multi-plan OK carrier',color:'#EF9F27',tag:'South',tagClass:'tag-reg',q:'GlobalHealth Medicare Advantage 2026 Oklahoma market, plan types, network, dual eligible plans, agent notes'},
+  {name:'Arkansas BCBS',region:'Arkansas',states:'Dominant AR carrier',color:'#3B6D11',tag:'South',tagClass:'tag-reg',q:'Arkansas Blue Cross Blue Shield Medicare Advantage 2026 Arkansas market, plan types, provider network, agent notes'},
+];
+
+function buildCards() {
+  const ng = document.getElementById('nat-grid');
+  const rg = document.getElementById('reg-grid');
+  NAT_CARRIERS.forEach(c => ng.innerHTML += cardHTML(c));
+  REG_CARRIERS.forEach(c => rg.innerHTML += cardHTML(c));
+}
+
+function cardHTML(c) {
+  const safe = c.q.replace(/'/g,"\\'");
+  return `<div class="c-card" onclick="askTopic('${safe}')">
+    <div class="c-card-name"><div class="c-card-dot" style="background:${c.color}"></div>${c.name}</div>
+    <div class="c-card-region">${c.region}</div>
+    <div class="c-card-states">${c.states}</div>
+    <span class="c-tag ${c.tagClass}">${c.tag}</span>
+  </div>`;
+}
+
+function filterCards(v) {
+  v = v.toLowerCase();
+  document.querySelectorAll('.c-card').forEach(c => {
+    c.style.display = c.innerText.toLowerCase().includes(v) ? '' : 'none';
+  });
+}
+
+// ── AI SYSTEM PROMPT ──
+const SYSTEM = `You are MedicareHelpDesk, the AI-powered expert resource for Senior Services Direct — a national Medicare insurance agency. You speak exclusively to licensed Medicare insurance agents across all 50 states.
+
+## 2026 OFFICIAL CMS COST DATA:
+Part B: Standard premium $202.90/mo (↑$17.90 from $185). Annual deductible $283 (↑$26 from $257).
+Part A: Hospital deductible $1,736/benefit period. Days 61-90: $434/day. Lifetime reserve: $868/day. SNF days 21-100: $217/day. Part A premium: $0 (40+ quarters), $311/mo (30-39 quarters), $565/mo (<30 quarters).
+Part D 2026: $2,000 OOP catastrophic cap. No coverage gap (donut hole eliminated). Max deductible $590. Insulin max $35/mo per product; no deductible on insulin. ACIP vaccines $0. Avg stand-alone PDP $34.50/mo (↓ from $38.31). Avg MA-PD after rebate $11.50/mo (↓ from $13.32). Medicare Prescription Payment Plan (M3P) auto-renewal active for 2026.
+IRMAA 2026 (based on 2024 MAGI, 2-year lookback): ≤$109K individual/$218K joint→$202.90. $109-137K/$218-274K→$284.10. $137-164K/$274-328K→$446.30. $164-191K/$328-382K→$568.50. $191-500K/$382-750K→$649.20. >$500K/>$750K→$689.90. Part D IRMAA surcharge: $14.50-$91.00/mo (same brackets, added to plan premium).
+MA market 2026: ~5,555 total plans. Avg 39 options/beneficiary (↓from 42). D-SNPs: 1,019 (↑19%). C-SNPs: 548 (↑44%). CMS increased avg payments 5.06% ($25B) despite carrier contractions.
+
+## NATIONAL CARRIERS 2026:
+UnitedHealthcare: Largest MA carrier. 48 states + DC, 2,597 counties (↓211 counties from 2025). HMO, PPO, D-SNP, C-SNP, PFFS, tailored plans. $0 premiums in 45 states. ~1M providers. D-SNPs reach ~80% of dual eligibles. C-SNPs available to 46M+ eligible beneficiaries. 93% of members saw stable/decreased Tier 2 copays. PDPs: AARP Medicare Rx Preferred, AARP Medicare Rx Saver. Network exits 2026: Lehigh Valley Health Network (PA), Mass General Brigham PCPs (MA).
+
+Humana: 2nd largest. 46 states + DC (↓from 48), 85% of US counties (↓from 89%). All plans include dental/vision/hearing. Part B Giveback on select plans. New ESRD/CKD benefits added to non-SNP plans in OK, TX, NC, VA. CarePlus (FL subsidiary): 4.5 stars, strong Tampa Bay/Orlando/South FL presence. PDPs: Basic Rx, Premier Rx, Value Rx (83% see decrease). Network exits: St. Luke's Health (ID), Centra Health (VA), Montrose Regional (CO), Kettering Health (OH).
+
+Aetna/CVS Health: 43 states + DC (↓from 44), 2,159 counties (↓100). Highest weighted avg star ratings among near-nationwide carriers. 88% members in 4+ star plans. $0 premium plan in every county; 82% of eligibles access. All plans: $0 Tier 1/2 drugs, dental, vision, hearing, SilverSneakers. C-SNPs now 18 states (16 new for 2026). D-SNPs expanded to 119 new counties. Aetna Medicare Extra Benefits Card. PDP: SilverScript Choice (open network).
+
+Wellcare/Centene: 32 states, 1,850 counties (+51 new). $0/low PCP copays on all MA-PD plans. $0 ACIP vaccines. WellCare Rewards Card. LIS auto-enrollment recipient in most regions (filed at/below LIS benchmark). MOOP as low as $1,000 on select plans. PDPs: Wellcare Classic, Wellcare Value Script. 8M+ PDP members.
+
+Devoted Health: 29 states. Largest C-SNP county expansion of any carrier (+965 counties). 92% of plans have $0 premium. 95% include $0 MA-PD. MOOP $2,700-$9,250. Tech-forward member experience. Founded 2017.
+
+Elevance/Anthem: 4th largest. Added 1 state, 64 counties for 2026. EXITED standalone PDP market entirely — affected members auto-enrolled elsewhere. Brands: Anthem, Blue Cross, WellPoint, Healthy Blue. D-SNP expansion ongoing.
+
+HealthSpring/HCSC: Formerly Cigna MA — sold to Health Care Service Corporation. Selected markets. PDPs: Assurance Rx, Extra Rx. Stars 2.5-4.0. UNC Health (NC) went out-of-network Jan 2026.
+
+Kaiser Permanente: 8 states + DC (CA, CO, GA, HI, MD, OR, VA, WA). Stable footprint. Integrated HMO — employed providers. High star ratings. Generally direct enrollment only, not through FMO channels.
+
+Molina Healthcare: Multi-state. Medicaid heritage carrier. Strong dual eligible/low-income focus. D-SNP and C-SNP plans. Government-sponsored health plan specialist. Markets: CA, FL, IL, MI, MS, NM, NY, OH, SC, TX, UT, WA, and more.
+
+Mutual of Omaha: Leading Medigap/Medicare Supplement carrier nationally. AM Best A+ rated. Plan G and Plan N most popular. Available in all 50 states. Competitive pricing and strong financial ratings.
+
+WellPoint: Elevance brand in select markets. Part of Anthem family.
+Healthy Blue: Elevance/Blue Cross brand. Selected states. Dual-eligible focus. Medicaid coordination.
+
+## REGIONAL CARRIERS 2026 (National Coverage, All States):
+West/California: SCAN Health Plan (CA,AZ,NV,TX — non-profit senior focus, strong star ratings). Blue Shield of CA (California). Health Net (CA + Western states, Centene subsidiary). Aspire Health Plan (Monterey Bay CA, regional HMO).
+
+Pacific Northwest: Premera Blue Cross (WA, AK). Regence BCBS (OR,WA,ID,UT). Providence Health Plan (OR,WA — integrated health system).
+
+Mountain West: SelectHealth (UT,ID,NV — Intermountain Health). Rocky Mountain Health Plans (CO, Grand Valley). Prominence Health Plan (NV).
+
+Midwest: Medica (MN,ND,SD,NE,KS,WI,IA — large upper Midwest carrier). UCare (MN — provider-connected). Dean Health Plan (WI — SSM Health). Quartz (WI,IA,IL,MN). Sanford Health (ND,SD,MN,IA — strong rural coverage). WPS Health Insurance (WI,MI,IL). SummaCare (Northeast OH — Summa Health). Priority Health (MI). Health Alliance Plan (MI — Henry Ford Health System).
+
+Northeast: Capital Blue Cross (PA — BCBS affiliate). Highmark BCBS (PA,WV,DE). Independence Blue Cross (Philadelphia PA). Tufts Health Plan (New England — MA,RI,NH). Fallon Health (Central MA). CDPHP (Albany/Capital Region NY). MVP Health Care (NY,VT). Harvard Pilgrim (MA,ME,NH).
+
+South/Southeast: Florida Blue Medicare (Florida statewide, HMO and PPO). Freedom Health (FL — 5.0 Part C stars, Elevance-connected, OTC $35-135/mo, J.D. Power #2 in FL). Optimum HealthCare (FL — HMO, D-SNP focus). Simply Healthcare (FL — Centene, dual eligible). HealthSun (South FL HMO). BayCare Health Plans (Tampa Bay FL). Health First (Space Coast/Brevard FL). Capital Health Plan (Tallahassee FL). CHRISTUS Health Plan (TX,LA,NM — Catholic health system). Baylor Scott & White Health Plan (TX — large provider-sponsored). GlobalHealth (Oklahoma). Arkansas BCBS.
+
+## PDP MARKET: 5 carriers = 94% of all stand-alone PDPs. Aetna (SilverScript Choice), HCSC (Assurance Rx, Extra Rx), Humana (Basic Rx, Premier Rx, Value Rx), UHC (AARP Rx Preferred, AARP Rx Saver), Wellcare (Classic, Value Script). Exited PDP market: Cigna, Clear Spring Health, Elevance, Mutual of Omaha.
+
+## ENROLLMENT PERIODS:
+IEP: 7-month birthday window (3 before + birthday month + 3 after). No penalty.
+AEP: Oct 15 – Dec 7. Effective Jan 1. All Medicare beneficiaries.
+OEP: Jan 1 – Mar 31. Current MA enrollees only. Effective 1st of following month.
+GEP: Jan 1 – Mar 31. Missed IEP. Coverage starts July 1. Penalties may apply.
+SEPs: Employer loss (8mo Part B / 63 days Part D/MA), move (2mo), plan termination (2mo), Medicaid gain/loss (monthly for duals), LIS determination (quarterly), SNP qualify (monthly), institutional (monthly), 5-star (Dec 8-Nov 30).
+LEPs: Part B 10%/12mo uncovered (permanent). Part D 1% national base × months (permanent). Part A 10% × 2 yrs delay (premium payers only).
+
+## MEDIGAP:
+Standardized plans A-N. Plan G most popular for new enrollees. Plan N growing — lower premium with small copays ($20 office, $50 ER not admitted). Plans C and F closed to new eligibles after Jan 1, 2020. No drug coverage. No network restrictions — any Medicare provider. Open enrollment: 6 months from Part B enrollment at 65 (guaranteed issue). Birthday rule: CA, ID, IL, KY, LA, MD, NV, OK, OR allow switching on birthday without underwriting. Pricing types: community-rated, issue-age, attained-age. Top sellers: Mutual of Omaha, Aetna, UHC/AARP, Humana, HCSC, BCBS affiliates, Colonial Penn, Transamerica, Globe Life.
+
+## SNPs 2026:
+D-SNPs: 1,019 nationwide (↑19%). For dual eligibles (Medicare + Medicaid). Monthly SEP — can switch any month. Fully integrated D-SNPs now standard in most states. Nearly 6M enrolled nationally.
+C-SNPs: 548 (↑44%). Specific chronic conditions: CHF, COPD, cardiovascular disease, diabetes, ESRD. Devoted Health made largest C-SNP county expansion.
+I-SNPs: For institutionalized beneficiaries. Monthly SEP.
+
+## CMS COMPLIANCE:
+SOA: 48hrs before appointment (except walk-ins/same-day). Retain 10 years.
+TPMO Disclaimer (required verbatim on all materials/calls): "We do not offer every plan available in your area. Any information we provide is limited to those plans we do offer in your area. Please contact Medicare.gov or 1-800-MEDICARE to get information on all of your options."
+Call recording: Required for all marketing/enrollment calls.
+Prohibited: Door-to-door without invite, cold calling, healthcare setting marketing, gifts >$15/item or $75/year, cash/gift card equivalents, marketing outside service area, implying government endorsement.
+AHIP certification: Required annually before selling MA/Part D.
+2026 new rules: Plans cannot reverse approved inpatient admissions (except error/fraud). Appeals loopholes tightened. Enhanced CMS marketing material review.
+
+## YOUR ROLE:
+- Speak agent-to-agent: direct, precise, professional, collegial
+- Bold key terms. Bullets for multiple points. Numbered lists for steps.
+- For client scenarios: reason through step by step
+- Always note when availability varies by county/state
+- Proactively flag compliance considerations
+- Remind agents to verify county-specific availability at Medicare Plan Finder
+- Never provide legal advice — direct complex situations to compliance/legal
+- Not a beneficiary tool — designed exclusively for licensed agents`;
+
+let conversationHistory = [];
+let isLoading = false;
+
+function addMessage(role, html) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  const av = role === 'bot' ? 'MD' : 'AG';
+  const ts = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  div.innerHTML = `<div class="avatar">${av}</div><div><div class="bubble">${html}</div><div class="msg-time">${ts}</div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'typing-row'; div.id = 'typing';
+  div.innerHTML = `<div class="avatar" style="background:#0C447C;color:#85B7EB;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;">MD</div><div class="typing-bub"><span></span><span></span><span></span></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() { const t = document.getElementById('typing'); if(t) t.remove(); }
+
+function formatResponse(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^#{1,3} (.+)$/gm, '<strong>$1</strong>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li><strong>$1.</strong> $2</li>')
+    .replace(/(<li>[\s\S]*?<\/li>)+/g, m => `<ul>${m}</ul>`)
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+
+async function sendMessage() {
+  const inp = document.getElementById('userInput');
+  const text = inp.value.trim();
+  if (!text || isLoading) return;
+  inp.value = ''; inp.style.height = 'auto';
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  addMessage('user', text.replace(/</g,'&lt;').replace(/>/g,'&gt;'));
+  conversationHistory.push({ role: 'user', content: text });
+  showTyping();
+  try {
+    const response = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM,
+        messages: conversationHistory
+      })
+    });
+    const data = await response.json();
+    removeTyping();
+    const reply = data.content?.find(b => b.type === 'text')?.text || 'Connection issue — please try again.';
+    conversationHistory.push({ role: 'assistant', content: reply });
+    addMessage('bot', formatResponse(reply));
+  } catch(err) {
+    removeTyping();
+    addMessage('bot', 'Connection error — please check your network and try again.');
+  }
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('userInput').focus();
+}
+
+function askTopic(q) {
+  switchTab('chat', null);
+  document.getElementById('userInput').value = q;
+  sendMessage();
+}
+
+function useHint(el) {
+  document.getElementById('userInput').value = el.textContent;
+  sendMessage();
+}
+
+function clearChat() {
+  if (!confirm('Clear conversation history?')) return;
+  document.getElementById('messages').innerHTML = '';
+  conversationHistory = [];
+  init();
+}
+
+function exportChat() {
+  const msgs = document.querySelectorAll('.msg');
+  let txt = 'SENIOR SERVICES DIRECT — MEDICARE HELPDESK\n';
+  txt += 'National Edition · ' + new Date().toLocaleString() + '\n';
+  txt += '='.repeat(60) + '\n\n';
+  msgs.forEach(m => {
+    const role = m.classList.contains('user') ? 'AGENT' : 'HELPDESK';
+    const b = m.querySelector('.bubble');
+    if (b) txt += `[${role}]\n${b.innerText || b.textContent}\n\n`;
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], {type:'text/plain'}));
+  a.download = 'MedicareHelpDesk_Chat_' + Date.now() + '.txt';
+  a.click();
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (el) { el.classList.add('active'); }
+  else { document.querySelectorAll('.tab').forEach(t => { if(t.textContent === 'Chat') t.classList.add('active'); }); }
+  const chatPanel = document.getElementById('chat-panel');
+  chatPanel.style.display = 'none';
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  if (name === 'chat') {
+    chatPanel.style.display = 'flex';
+  } else {
+    const p = document.getElementById(name + '-panel');
+    if (p) p.classList.add('active');
+  }
+  const rp = document.getElementById('refPanel');
+  if (rp) rp.style.display = name === 'chat' ? 'flex' : 'none';
+}
+
+document.getElementById('userInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+document.getElementById('userInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 110) + 'px';
+});
+
+function init() {
+  addMessage('bot', `Welcome to <strong>Senior Services Direct Medicare HelpDesk</strong> — National Edition.<br><br>I'm your AI-powered Medicare resource for all 50 states, loaded with verified <strong>2026 data</strong> including:<br><ul><li><strong>12 national carriers</strong> — UHC, Humana, Aetna, Wellcare, Devoted, Elevance, Molina, Kaiser, and more</li><li><strong>35+ regional carriers</strong> across every U.S. region — Northeast, Southeast, Midwest, South, Mountain West, Pacific Northwest, and California/West</li><li>Official 2026 CMS cost data, IRMAA brackets, Part D redesign, SNP expansion data</li><li>Enrollment periods, SEP triggers, compliance rules, Medigap plans A–N</li></ul><br>Use the sidebar to browse by topic or carrier, explore the tabs for quick reference data, or just ask me anything. What can I help you with?`);
+}
+
+buildCards();
+init();
+</script>
+<!-- v1777085324 --></body>
+</html>
