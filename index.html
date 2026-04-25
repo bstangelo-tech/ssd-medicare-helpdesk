@@ -194,7 +194,6 @@ textarea.chat-input::placeholder{color:var(--tt);}
 @media(max-width:900px){.sidebar{display:none;}.ref-panel{display:none;}}
 @media(max-width:600px){.brand p{display:none;}.tabs{padding:0 8px;}.tab{padding:9px 10px;font-size:11px;}}
 </style>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 <div id="loginScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#042C53;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
@@ -202,11 +201,22 @@ textarea.chat-input::placeholder{color:var(--tt);}
     <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
   </div>
   <div style="text-align:center;">
-    <h1 style="font-family:Georgia,serif;color:#fff;font-size:24px;font-weight:400;margin-bottom:6px;">Medicare HelpDesk</h1>
+    <h1 style="font-family:Georgia,serif;color:#fff;font-size:26px;font-weight:400;margin-bottom:6px;">Medicare HelpDesk</h1>
     <p style="color:#85B7EB;font-size:12px;letter-spacing:.05em;text-transform:uppercase;">Senior Services Direct - Agent Portal</p>
   </div>
-  <button onclick="netlifyIdentity.open()" style="background:#378ADD;color:#fff;border:none;border-radius:10px;padding:13px 36px;font-size:15px;font-weight:500;cursor:pointer;">Agent Login</button>
-  <p style="color:#85B7EB;font-size:11px;">Licensed agents only - contact your administrator for access</p>
+  <div style="background:rgba(255,255,255,.08);border-radius:14px;padding:28px 36px;display:flex;flex-direction:column;gap:14px;width:320px;">
+    <div>
+      <label style="color:#85B7EB;font-size:12px;font-weight:500;display:block;margin-bottom:6px;">Email</label>
+      <input id="loginEmail" type="email" placeholder="your@email.com" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:14px;outline:none;font-family:sans-serif;">
+    </div>
+    <div>
+      <label style="color:#85B7EB;font-size:12px;font-weight:500;display:block;margin-bottom:6px;">Access Code</label>
+      <input id="loginPass" type="password" placeholder="Enter your access code" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:14px;outline:none;font-family:sans-serif;" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="loginError" style="color:#F09595;font-size:12px;display:none;text-align:center;">Incorrect access code. Contact your administrator.</div>
+    <button onclick="doLogin()" style="background:#378ADD;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:500;cursor:pointer;width:100%;margin-top:4px;">Sign In</button>
+  </div>
+  <p style="color:#85B7EB;font-size:11px;">Licensed agents only - contact Bryson for access</p>
 </div>
 
 <div class="app">
@@ -225,7 +235,7 @@ textarea.chat-input::placeholder{color:var(--tt);}
     <button class="icon-btn" title="Clear conversation" onclick="clearChat()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
     </button>
-    <button class="icon-btn" title="Export chat log" onclick="exportChat()">
+    <button class="icon-btn" title="Sign out" onclick="agentLogout()" style="margin-right:2px;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg></button><button class="icon-btn" title="Export chat log" onclick="exportChat()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
     </button>
   </div>
@@ -900,18 +910,38 @@ init();
 </script>
 
 <script>
-if(window.netlifyIdentity){
-  netlifyIdentity.on('init', function(user){
-    if(!user){ document.getElementById('loginScreen').style.display='flex'; }
-    else { document.getElementById('loginScreen').style.display='none'; }
-  });
-  netlifyIdentity.on('login', function(user){
+var ACCESS_CODE = 'SSDAgents2026';
+var loggedIn = sessionStorage.getItem('ssd_agent_auth') === 'true';
+
+function doLogin(){
+  var email = document.getElementById('loginEmail').value.trim();
+  var pass = document.getElementById('loginPass').value.trim();
+  if(!email){ document.getElementById('loginError').style.display='block'; document.getElementById('loginError').textContent='Please enter your email.'; return; }
+  if(pass === ACCESS_CODE){
+    sessionStorage.setItem('ssd_agent_auth','true');
+    sessionStorage.setItem('ssd_agent_email', email);
     document.getElementById('loginScreen').style.display='none';
-    netlifyIdentity.close();
-  });
-  netlifyIdentity.on('logout', function(){
+    window.agentInitials = email.substring(0,2).toUpperCase();
+  } else {
+    document.getElementById('loginError').style.display='block';
+    document.getElementById('loginError').textContent='Incorrect access code. Contact your administrator.';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function(){
+  if(!loggedIn){
     document.getElementById('loginScreen').style.display='flex';
-  });
+  } else {
+    document.getElementById('loginScreen').style.display='none';
+    var email = sessionStorage.getItem('ssd_agent_email') || '';
+    window.agentInitials = email.substring(0,2).toUpperCase();
+  }
+});
+
+function agentLogout(){
+  sessionStorage.removeItem('ssd_agent_auth');
+  sessionStorage.removeItem('ssd_agent_email');
+  location.reload();
 }
 </script>
 </body>
