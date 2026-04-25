@@ -194,70 +194,48 @@ textarea.chat-input::placeholder{color:var(--tt);}
 @media(max-width:900px){.sidebar{display:none;}.ref-panel{display:none;}}
 @media(max-width:600px){.brand p{display:none;}.tabs{padding:0 8px;}.tab{padding:9px 10px;font-size:11px;}}
 </style>
+
+<style>
+#ls{position:fixed;top:0;left:0;width:100%;height:100%;background:#042C53;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+#ls h1{font-family:Georgia,serif;color:#fff;font-size:24px;font-weight:400;margin:12px 0 4px;}
+#ls p.sub{color:#85B7EB;font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px;}
+#ls .box{background:rgba(255,255,255,.08);border-radius:14px;padding:24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;}
+#ls label{color:#85B7EB;font-size:11px;font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;}
+#ls input, #ls select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-size:13px;font-family:sans-serif;box-sizing:border-box;}
+#ls input::placeholder{color:rgba(255,255,255,.4);}
+#ls .err{color:#F09595;font-size:12px;text-align:center;display:none;padding:6px;}
+#ls button{background:#378ADD;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;}
+#ls button:hover{background:#185FA5;}
+#ls .note{color:#85B7EB;font-size:11px;margin-top:12px;}
+</style>
 </head>
 <body>
-<div id="loginScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#042C53;z-index:9999;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;">
-  <div style="width:52px;height:52px;border-radius:12px;background:#185FA5;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+<div id="ls">
+  <div style="width:54px;height:54px;border-radius:13px;background:#185FA5;display:flex;align-items:center;justify-content:center;">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
   </div>
-  <h1 style="font-family:Georgia,serif;color:#fff;font-size:22px;font-weight:400;margin-bottom:4px;">Medicare HelpDesk</h1>
-  <p style="color:#85B7EB;font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px;">Senior Services Direct - Agent Portal</p>
-  <div style="background:rgba(255,255,255,.07);border-radius:14px;padding:24px 28px;display:flex;flex-direction:column;gap:12px;width:100%;max-width:360px;">
-    <p style="color:#85B7EB;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Agent Information</p>
-    <div>
-      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Full Name *</label>
-      <input id="regName" type="text" placeholder="John Smith" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
-    </div>
-    <div>
-      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Agent Email *</label>
-      <input id="regEmail" type="email" placeholder="john@email.com" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
-    </div>
-    <div>
-      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Phone Number *</label>
-      <input id="regPhone" type="tel" placeholder="(555) 555-5555" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
-    </div>
-    <div>
-      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Currently Licensed? *</label>
-      <select id="regLicensed" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:#0C447C;color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
+  <h1>Medicare HelpDesk</h1>
+  <p class="sub">Senior Services Direct &mdash; Agent Portal</p>
+  <div class="box">
+    <div><label>Full Name</label><input id="f1" type="text" placeholder="John Smith"></div>
+    <div><label>Agent Email</label><input id="f2" type="email" placeholder="john@email.com"></div>
+    <div><label>Phone Number</label><input id="f3" type="tel" placeholder="(555) 555-5555"></div>
+    <div><label>Currently Licensed?</label>
+      <select id="f4" style="background:#0C447C;">
         <option value="">Select...</option>
         <option value="Yes">Yes - Licensed</option>
         <option value="No">No - Not Yet Licensed</option>
       </select>
     </div>
-    <div>
-      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Current Upline *</label>
-      <input id="regUpline" type="text" placeholder="e.g. Senior Services Direct" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
+    <div><label>Current Upline</label><input id="f5" type="text" placeholder="e.g. Senior Services Direct"></div>
+    <div style="border-top:1px solid rgba(255,255,255,.15);padding-top:12px;">
+      <label>Access Code</label>
+      <input id="f6" type="password" placeholder="Enter access code">
     </div>
-    <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:12px;margin-top:2px;">
-      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Access Code *</label>
-      <input id="regCode" type="password" placeholder="Enter your access code" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
-    </div>
-    <div id="loginError" style="color:#F09595;font-size:12px;display:none;text-align:center;"></div>
-    <button onclick="doLogin()" style="background:#378ADD;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-top:2px;">Access Medicare HelpDesk</button>
+    <div class="err" id="ferr">Please fill in all fields correctly.</div>
+    <button id="loginBtn">Access Medicare HelpDesk &rarr;</button>
   </div>
-  <p style="color:#85B7EB;font-size:11px;margin-top:14px;">Licensed agents only - contact Bryson for access code</p>
-</div>
-<div id="loginScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#042C53;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
-  <div style="width:60px;height:60px;border-radius:14px;background:#185FA5;display:flex;align-items:center;justify-content:center;">
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
-  </div>
-  <div style="text-align:center;">
-    <h1 style="font-family:Georgia,serif;color:#fff;font-size:26px;font-weight:400;margin-bottom:6px;">Medicare HelpDesk</h1>
-    <p style="color:#85B7EB;font-size:12px;letter-spacing:.05em;text-transform:uppercase;">Senior Services Direct - Agent Portal</p>
-  </div>
-  <div style="background:rgba(255,255,255,.08);border-radius:14px;padding:28px 36px;display:flex;flex-direction:column;gap:14px;width:320px;">
-    <div>
-      <label style="color:#85B7EB;font-size:12px;font-weight:500;display:block;margin-bottom:6px;">Email</label>
-      <input id="loginEmail" type="email" placeholder="your@email.com" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:14px;outline:none;font-family:sans-serif;">
-    </div>
-    <div>
-      <label style="color:#85B7EB;font-size:12px;font-weight:500;display:block;margin-bottom:6px;">Access Code</label>
-      <input id="loginPass" type="password" placeholder="Enter your access code" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:14px;outline:none;font-family:sans-serif;" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <div id="loginError" style="color:#F09595;font-size:12px;display:none;text-align:center;">Incorrect access code. Contact your administrator.</div>
-    <button onclick="doLogin()" style="background:#378ADD;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:500;cursor:pointer;width:100%;margin-top:4px;">Sign In</button>
-  </div>
-  <p style="color:#85B7EB;font-size:11px;">Licensed agents only - contact Bryson for access</p>
+  <p class="note">Licensed agents only &mdash; contact Bryson for access code</p>
 </div>
 
 <div class="app">
@@ -276,7 +254,7 @@ textarea.chat-input::placeholder{color:var(--tt);}
     <button class="icon-btn" title="Clear conversation" onclick="clearChat()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
     </button>
-    <button class="icon-btn" title="Sign out" onclick="agentLogout()" style="margin-right:2px;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg></button><button class="icon-btn" title="Export chat log" onclick="exportChat()">
+    <button class="icon-btn" title="Export chat log" onclick="exportChat()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
     </button>
   </div>
@@ -950,54 +928,34 @@ buildCards();
 init();
 </script>
 
-
 <script>
-var ACCESS_CODE = 'MedDesk#847Kx';
-var loggedIn = sessionStorage.getItem('ssd_agent_auth') === 'true';
-
-function doLogin(){
-  var name = document.getElementById('regName').value.trim();
-  var email = document.getElementById('regEmail').value.trim();
-  var phone = document.getElementById('regPhone').value.trim();
-  var licensed = document.getElementById('regLicensed').value;
-  var upline = document.getElementById('regUpline').value.trim();
-  var code = document.getElementById('regCode').value.trim();
-  var err = document.getElementById('loginError');
-  err.style.display='none';
-  
-  if(!name){ err.style.display='block'; err.textContent='Please enter your full name.'; return; }
-  if(!email){ err.style.display='block'; err.textContent='Please enter your email.'; return; }
-  if(!phone){ err.style.display='block'; err.textContent='Please enter your phone number.'; return; }
-  if(!licensed){ err.style.display='block'; err.textContent='Please select your license status.'; return; }
-  if(!upline){ err.style.display='block'; err.textContent='Please enter your current upline.'; return; }
-  if(code !== ACCESS_CODE){ err.style.display='block'; err.textContent='Incorrect access code. Contact Bryson for access.'; return; }
-  
-  sessionStorage.setItem('ssd_agent_auth','true');
-  sessionStorage.setItem('ssd_agent_name', name);
-  sessionStorage.setItem('ssd_agent_email', email);
-  sessionStorage.setItem('ssd_agent_phone', phone);
-  sessionStorage.setItem('ssd_agent_licensed', licensed);
-  sessionStorage.setItem('ssd_agent_upline', upline);
-  document.getElementById('loginScreen').style.display='none';
-  var parts = name.trim().split(' ');
-  window.agentInitials = (parts[0][0] + (parts.length > 1 ? parts[parts.length-1][0] : '')).toUpperCase();
-}
-
-window.addEventListener('DOMContentLoaded', function(){
-  if(!loggedIn){
-    document.getElementById('loginScreen').style.display='flex';
-  } else {
-    document.getElementById('loginScreen').style.display='none';
-    var n = sessionStorage.getItem('ssd_agent_name') || '';
-    var parts = n.trim().split(' ');
-    window.agentInitials = (parts[0][0] + (parts.length > 1 ? parts[parts.length-1][0] : '')).toUpperCase();
+(function(){
+  var CODE = 'MedDesk#847Kx';
+  var auth = sessionStorage.getItem('ssd_ok');
+  if(auth === '1'){
+    document.getElementById('ls').style.display = 'none';
   }
-});
-
-function agentLogout(){
-  sessionStorage.clear();
-  location.reload();
-}
+  document.getElementById('loginBtn').addEventListener('click', function(){
+    var n=document.getElementById('f1').value.trim();
+    var e=document.getElementById('f2').value.trim();
+    var p=document.getElementById('f3').value.trim();
+    var l=document.getElementById('f4').value;
+    var u=document.getElementById('f5').value.trim();
+    var c=document.getElementById('f6').value.trim();
+    var err=document.getElementById('ferr');
+    err.style.display='none';
+    if(!n){err.textContent='Please enter your full name.';err.style.display='block';return;}
+    if(!e){err.textContent='Please enter your email.';err.style.display='block';return;}
+    if(!p){err.textContent='Please enter your phone number.';err.style.display='block';return;}
+    if(!l){err.textContent='Please select your license status.';err.style.display='block';return;}
+    if(!u){err.textContent='Please enter your current upline.';err.style.display='block';return;}
+    if(c !== CODE){err.textContent='Incorrect access code. Contact Bryson.';err.style.display='block';return;}
+    sessionStorage.setItem('ssd_ok','1');
+    sessionStorage.setItem('ssd_name',n);
+    sessionStorage.setItem('ssd_email',e);
+    document.getElementById('ls').style.display='none';
+  });
+})();
 </script>
 </body>
 </html>
