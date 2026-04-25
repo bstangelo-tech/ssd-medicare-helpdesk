@@ -196,6 +196,47 @@ textarea.chat-input::placeholder{color:var(--tt);}
 </style>
 </head>
 <body>
+<div id="loginScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#042C53;z-index:9999;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;">
+  <div style="width:52px;height:52px;border-radius:12px;background:#185FA5;display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+  </div>
+  <h1 style="font-family:Georgia,serif;color:#fff;font-size:22px;font-weight:400;margin-bottom:4px;">Medicare HelpDesk</h1>
+  <p style="color:#85B7EB;font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px;">Senior Services Direct - Agent Portal</p>
+  <div style="background:rgba(255,255,255,.07);border-radius:14px;padding:24px 28px;display:flex;flex-direction:column;gap:12px;width:100%;max-width:360px;">
+    <p style="color:#85B7EB;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Agent Information</p>
+    <div>
+      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Full Name *</label>
+      <input id="regName" type="text" placeholder="John Smith" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
+    </div>
+    <div>
+      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Agent Email *</label>
+      <input id="regEmail" type="email" placeholder="john@email.com" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
+    </div>
+    <div>
+      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Phone Number *</label>
+      <input id="regPhone" type="tel" placeholder="(555) 555-5555" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
+    </div>
+    <div>
+      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Currently Licensed? *</label>
+      <select id="regLicensed" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:#0C447C;color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
+        <option value="">Select...</option>
+        <option value="Yes">Yes - Licensed</option>
+        <option value="No">No - Not Yet Licensed</option>
+      </select>
+    </div>
+    <div>
+      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Current Upline *</label>
+      <input id="regUpline" type="text" placeholder="e.g. Senior Services Direct" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:12px;margin-top:2px;">
+      <label style="color:#85B7EB;font-size:11px;font-weight:500;display:block;margin-bottom:5px;">Access Code *</label>
+      <input id="regCode" type="password" placeholder="Enter your access code" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none;font-family:sans-serif;">
+    </div>
+    <div id="loginError" style="color:#F09595;font-size:12px;display:none;text-align:center;"></div>
+    <button onclick="doLogin()" style="background:#378ADD;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:500;cursor:pointer;width:100%;margin-top:2px;">Access Medicare HelpDesk</button>
+  </div>
+  <p style="color:#85B7EB;font-size:11px;margin-top:14px;">Licensed agents only - contact Bryson for access code</p>
+</div>
 <div id="loginScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#042C53;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
   <div style="width:60px;height:60px;border-radius:14px;background:#185FA5;display:flex;align-items:center;justify-content:center;">
     <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
@@ -909,23 +950,37 @@ buildCards();
 init();
 </script>
 
+
 <script>
-var ACCESS_CODE = 'SSDAgents2026';
+var ACCESS_CODE = 'MedDesk#847Kx';
 var loggedIn = sessionStorage.getItem('ssd_agent_auth') === 'true';
 
 function doLogin(){
-  var email = document.getElementById('loginEmail').value.trim();
-  var pass = document.getElementById('loginPass').value.trim();
-  if(!email){ document.getElementById('loginError').style.display='block'; document.getElementById('loginError').textContent='Please enter your email.'; return; }
-  if(pass === ACCESS_CODE){
-    sessionStorage.setItem('ssd_agent_auth','true');
-    sessionStorage.setItem('ssd_agent_email', email);
-    document.getElementById('loginScreen').style.display='none';
-    window.agentInitials = email.substring(0,2).toUpperCase();
-  } else {
-    document.getElementById('loginError').style.display='block';
-    document.getElementById('loginError').textContent='Incorrect access code. Contact your administrator.';
-  }
+  var name = document.getElementById('regName').value.trim();
+  var email = document.getElementById('regEmail').value.trim();
+  var phone = document.getElementById('regPhone').value.trim();
+  var licensed = document.getElementById('regLicensed').value;
+  var upline = document.getElementById('regUpline').value.trim();
+  var code = document.getElementById('regCode').value.trim();
+  var err = document.getElementById('loginError');
+  err.style.display='none';
+  
+  if(!name){ err.style.display='block'; err.textContent='Please enter your full name.'; return; }
+  if(!email){ err.style.display='block'; err.textContent='Please enter your email.'; return; }
+  if(!phone){ err.style.display='block'; err.textContent='Please enter your phone number.'; return; }
+  if(!licensed){ err.style.display='block'; err.textContent='Please select your license status.'; return; }
+  if(!upline){ err.style.display='block'; err.textContent='Please enter your current upline.'; return; }
+  if(code !== ACCESS_CODE){ err.style.display='block'; err.textContent='Incorrect access code. Contact Bryson for access.'; return; }
+  
+  sessionStorage.setItem('ssd_agent_auth','true');
+  sessionStorage.setItem('ssd_agent_name', name);
+  sessionStorage.setItem('ssd_agent_email', email);
+  sessionStorage.setItem('ssd_agent_phone', phone);
+  sessionStorage.setItem('ssd_agent_licensed', licensed);
+  sessionStorage.setItem('ssd_agent_upline', upline);
+  document.getElementById('loginScreen').style.display='none';
+  var parts = name.trim().split(' ');
+  window.agentInitials = (parts[0][0] + (parts.length > 1 ? parts[parts.length-1][0] : '')).toUpperCase();
 }
 
 window.addEventListener('DOMContentLoaded', function(){
@@ -933,14 +988,14 @@ window.addEventListener('DOMContentLoaded', function(){
     document.getElementById('loginScreen').style.display='flex';
   } else {
     document.getElementById('loginScreen').style.display='none';
-    var email = sessionStorage.getItem('ssd_agent_email') || '';
-    window.agentInitials = email.substring(0,2).toUpperCase();
+    var n = sessionStorage.getItem('ssd_agent_name') || '';
+    var parts = n.trim().split(' ');
+    window.agentInitials = (parts[0][0] + (parts.length > 1 ? parts[parts.length-1][0] : '')).toUpperCase();
   }
 });
 
 function agentLogout(){
-  sessionStorage.removeItem('ssd_agent_auth');
-  sessionStorage.removeItem('ssd_agent_email');
+  sessionStorage.clear();
   location.reload();
 }
 </script>
